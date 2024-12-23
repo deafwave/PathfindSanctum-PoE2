@@ -19,6 +19,8 @@ public class PathfindSanctumSettings : ISettings
     public string CurrentProfile;
 
     public ColorNode TextColor { get; set; } = new ColorNode(Color.White);
-    public ColorNode BackgroundColor { get; set; } = new ColorNode(Color.Black with { A = 128 });
+    public ColorNode BackgroundColor { get; set; } = new ColorNode(Color.FromArgb(128, 0, 0, 0));
     public ColorNode BestPathColor { get; set; } = new(Color.Green);
+
+    public RangeNode<int> FrameThickness { get; set; } = new RangeNode<int>(5, 0, 10);
 } 
