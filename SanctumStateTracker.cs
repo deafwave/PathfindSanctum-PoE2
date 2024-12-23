@@ -36,7 +36,7 @@ public class SanctumStateTracker
                 else
                 {
                     // Update existing room if new data is better
-                    roomStates[key].UpdateIfBetter(sanctumRoom);
+                    roomStates[key].UpdateRoom(sanctumRoom);
                 }
             }
         }
@@ -57,43 +57,23 @@ public class SanctumStateTracker
 public class RoomState
 {
     public string RoomType { get; private set; }
-    public List<string> Afflictions { get; private set; }
-    public List<string> Rewards { get; private set; }
-    public bool IsKnown { get; private set; }
+    public string Affliction { get; private set; }
+    public string Reward { get; private set; }
 
     public RoomState(SanctumRoomElement room)
     {
-        UpdateFromRoom(room);
+        UpdateRoom(room);
     }
 
-    public void UpdateIfBetter(SanctumRoomElement newRoom)
+    public void UpdateRoom(SanctumRoomElement newRoom)
     {
-        // If current state is unknown but new room is known, update
-        if (!IsKnown && newRoom.IsKnown)
-        {
-            UpdateFromRoom(newRoom);
-            return;
-        }
+        var newRoomType = newRoom.Data.FightRoom?.RoomType.Id;
+        var newAffliction = newRoom.Data?.RoomEffect?.ReadableName;
+        var newReward = newRoom.Data.RewardRoom?.RoomType.Id;
 
-        // If we have fewer afflictions known, update
-        if (Afflictions.Count < newRoom.Data.Afflictions.Count)
-        {
-            UpdateFromRoom(newRoom);
-            return;
-        }
-
-        // If we have fewer rewards known, update
-        if (Rewards.Count < newRoom.Data.Rewards.Count)
-        {
-            UpdateFromRoom(newRoom);
-        }
-    }
-
-    private void UpdateFromRoom(SanctumRoomElement room)
-    {
-        RoomType = room.Data.RoomType.ToString();
-        Afflictions = room.Data.Afflictions.Select(a => a.ToString()).ToList();
-        Rewards = room.Data.Rewards.Select(r => r.ToString()).ToList();
-        IsKnown = room.IsKnown;
+        // Only update each field if we're getting new information (not null/empty)
+        if (!string.IsNullOrEmpty(newRoomType)) RoomType = newRoomType;
+        if (!string.IsNullOrEmpty(newAffliction)) Affliction = newAffliction;
+        if (!string.IsNullOrEmpty(newReward)) Reward = newReward;
     }
 } 
