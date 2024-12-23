@@ -15,7 +15,7 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
     {
         if (!GameController.Game.IngameState.InGame) return;
 
-        var sanctumUI = GameController.Game.IngameState.IngameUi.SanctumUI;
+        var sanctumUI = GameController.Game.IngameState.IngameUi.SanctumFloorWindow;
         if (sanctumUI == null || !sanctumUI.IsVisible) return;
 
         var roomsByLayer = sanctumUI.RoomsByLayer;
