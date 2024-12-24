@@ -1,6 +1,7 @@
-using ExileCore.Shared.Attributes;
-using ExileCore.Shared.Interfaces;
-using ExileCore.Shared.Nodes;
+using ExileCore2.Shared.Interfaces;
+using ExileCore2.Shared.Nodes;
+using System.Collections.Generic;
+using System.Drawing;
 
 namespace PathfindSanctum;
 
@@ -9,7 +10,7 @@ public class PathfindSanctumSettings : ISettings
     public ToggleNode Enable { get; set; } = new ToggleNode(true);
     public ToggleNode DebugEnable { get; set; } = new ToggleNode(false);
     
-    public Dictionary<string, ProfileContent> Profiles = new Dictionary<string, ProfileContent>
+    public Dictionary<string, ProfileContent> Profiles = new()
     {
         ["Default"] = new ProfileContent(),
         ["No-Hit"] = new ProfileContent()

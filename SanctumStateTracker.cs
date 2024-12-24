@@ -1,4 +1,4 @@
-using ExileCore.PoEMemory.Elements.Sanctum;
+using ExileCore2.PoEMemory.Elements.Sanctum;
 using System.Collections.Generic;
 
 namespace PathfindSanctum;

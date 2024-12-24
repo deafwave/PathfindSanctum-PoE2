@@ -1,6 +1,6 @@
-using ExileCore;
-using ExileCore.PoEMemory.Elements.Sanctum;
-using ExileCore.Shared.Nodes;
+using ExileCore2;
+using ExileCore2.PoEMemory.Elements.Sanctum;
+using ExileCore2.Shared.Nodes;
 using System.Collections.Generic;
 
 namespace PathfindSanctum;

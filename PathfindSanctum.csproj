@@ -7,14 +7,23 @@
     <LangVersion>latest</LangVersion>
     <DebugType>embedded</DebugType>
     <PathMap>$(MSBuildProjectDirectory)=$(MSBuildProjectName)</PathMap>
+    <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="ExileCore2">
-      <HintPath>$(exapiPackage)\ExileCore2.dll</HintPath>
+    <!-- <Reference Include="ExileCore">
+      <HintPath>$(exileCore2Package)\ExileCore2.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="GameOffsets2">
-      <HintPath>$(exapiPackage)\GameOffsets2.dll</HintPath>
+    <Reference Include="GameOffsets">
+      <HintPath>$(exileCore2Package)\GameOffsets2.dll</HintPath>
+      <Private>False</Private>
+    </Reference> -->
+    <Reference Include="ExileCore">
+      <HintPath>ExileCore2.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="GameOffsets">
+      <HintPath>GameOffsets2.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

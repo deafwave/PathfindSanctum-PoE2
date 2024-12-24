@@ -1,3 +1,7 @@
+using System.Collections.Generic;
+
+namespace PathfindSanctum;
+
 public class ProfileContent
 {
     public Dictionary<string, float> RoomTypeWeights { get; set; }
