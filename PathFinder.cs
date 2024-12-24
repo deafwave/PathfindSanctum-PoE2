@@ -11,6 +11,7 @@ namespace PathfindSanctum;
 public class PathFinder
 {
     private readonly List<List<SanctumRoomElement>> roomsByLayer;
+    private readonly byte[][][] roomLayout;
     private readonly WeightCalculator weightCalculator;
     private readonly Graphics graphics;
     private readonly double[,] roomWeights;
@@ -30,6 +31,7 @@ public class PathFinder
     {
         this.graphics = graphics;
         this.roomsByLayer = floorWindow.RoomsByLayer;
+        this.roomLayout = floorWindow.FloorData.RoomLayout;
         this.settings = settings;
         this.weightCalculator = new WeightCalculator(gameController, settings);
         this.sanctumStateTracker = stateTracker;
@@ -65,75 +67,109 @@ public class PathFinder
     // TODO: Validate
     public List<(int, int)> FindBestPath()
     {
-        var visited = new HashSet<(int, int)>();
-        var paths = new Dictionary<(int, int), (int, int)>();
-        var weights = new Dictionary<(int, int), double>();
-        var queue = new PriorityQueue<(int, int), double>();
+        int numLayers = roomLayout.Length;
+        var startNode = (7, 0);
 
-        // Start from player position
-        queue.Enqueue((PlayerLayerIndex, PlayerRoomIndex), 0);
-        weights[(PlayerLayerIndex, PlayerRoomIndex)] = 0;
-
-        while (queue.Count > 0)
+        var bestPath = new Dictionary<(int, int), List<(int, int)>> { { startNode, new List<(int, int)> { startNode } } };
+        var minCost = new Dictionary<(int, int), int>();
+        foreach (var room in roomWeightMap.Keys)
         {
-            var current = queue.Dequeue();
-            if (!visited.Add(current)) continue;
+            minCost[room] = int.MaxValue;
+        }
+        minCost[startNode] = roomWeightMap[startNode];
 
-            var currentRoom = roomsByLayer[current.Item1][current.Item2];
-            foreach (var nextRoom in currentRoom.GetConnectedRooms())
+        var queue = new SortedSet<(int, int)>(Comparer<(int, int)>.Create((a, b) =>
+        {
+            int costA = minCost[a];
+            int costB = minCost[b];
+            if (costA != costB)
             {
-                var next = (nextRoom.Layer, nextRoom.RoomIndex);
-                var newWeight = weights[current] + roomWeights[next.Layer, next.RoomIndex];
+                return costA.CompareTo(costB);
+            }
+            // If costs are equal, break the tie by comparing the nodes
+            return a.CompareTo(b);
+        }))
+    {
+        startNode
+    };
 
-                if (!weights.ContainsKey(next) || newWeight > weights[next])
+        while (queue.Any())
+        {
+            var currentRoom = queue.First();
+            queue.Remove(currentRoom); // Remove the processed node from the queue
+
+            foreach (var neighbor in GetNeighbors(currentRoom, roomLayout))
+            {
+                int neighborCost = minCost[currentRoom] + roomWeightMap[neighbor];
+
+                if (neighborCost < minCost[neighbor])
                 {
-                    weights[next] = newWeight;
-                    paths[next] = current;
-                    queue.Enqueue(next, -newWeight); // Negative for max-heap behavior
+                    // Remove the old entry before adding the updated one
+                    queue.Remove(neighbor);
+
+                    // Update the minimum cost and best path
+                    minCost[neighbor] = neighborCost;
+
+                    // Add the neighbor to the queue at the correct position
+                    queue.Add(neighbor);
+
+                    // Create a new list for the neighbor node and copy the path from the current node
+                    bestPath[neighbor] = new List<(int, int)>(bestPath[currentRoom]) { neighbor };
                 }
             }
         }
 
-        return ReconstructPath(paths);
-    }
-
-    // TODO: Validate
-    private List<(int, int)> ReconstructPath(Dictionary<(int, int), (int, int)> paths)
-    {
-        var path = new List<(int, int)>();
-        var current = FindEndPoint();
-
-        while (paths.ContainsKey(current))
+        // DEBUGGING
+        /*foreach (var kvp in bestPath)
         {
-            path.Add(current);
-            current = paths[current];
+            var key = kvp.Key;
+            var value = kvp.Value;
+
+            // Output the key and value to LogError
+            LogError($"Key: {key}, Value: {string.Join(", ", value)}, minCost: {minCost[key]}");
+        }*/
+
+        var groupedPaths = bestPath.GroupBy(pair => pair.Value.Count());
+        var maxCountGroup = groupedPaths.OrderByDescending(group => group.Key).FirstOrDefault();
+        var path = maxCountGroup.OrderBy(pair => minCost.GetValueOrDefault(pair.Key, int.MaxValue)).FirstOrDefault().Value;
+        if (PlayerLayerIndex != -1 && PlayerRoomIndex != -1)
+        {
+            path = bestPath.TryGetValue((PlayerLayerIndex, PlayerRoomIndex), out var specificPath) ? specificPath : new List<(int, int)>();
         }
-        path.Add((PlayerLayerIndex, PlayerRoomIndex));
-        path.Reverse();
+
+
+        if (path == null)
+        {
+            return new List<(int, int)>();
+        }
+
         return path;
     }
 
-    // TODO: Validate
-    private (int, int) FindEndPoint()
+    private static IEnumerable<(int, int)> GetNeighbors((int, int) currentRoom, byte[][][] connections)
     {
-        // Find the room with the highest weight in the last accessible layer
-        var maxWeight = double.MinValue;
-        var endPoint = (0, 0);
+        int currentLayerIndex = currentRoom.Item1;
+        int currentRoomIndex = currentRoom.Item2;
+        int previousLayerIndex = currentLayerIndex - 1;
 
-        for (var layer = 0; layer < roomsByLayer.Count; layer++)
+        if (currentLayerIndex == 0)
         {
-            for (var room = 0; room < roomsByLayer[layer].Count; room++)
-            {
-                if (roomWeights[layer, room] > maxWeight)
-                {
-                    maxWeight = roomWeights[layer, room];
-                    endPoint = (layer, room);
-                }
-            }
+            yield break; // No neighbors to yield
         }
 
-        return endPoint;
+        byte[][] previousLayer = connections[previousLayerIndex];
+
+        for (int previousLayerRoomIndex = 0; previousLayerRoomIndex < previousLayer.Length; previousLayerRoomIndex++)
+        {
+            var previousLayerRoom = previousLayer[previousLayerRoomIndex];
+
+            if (previousLayerRoom.Contains((byte)currentRoomIndex))
+            {
+                yield return (previousLayerIndex, previousLayerRoomIndex);
+            }
+        }
     }
+
     public void DrawDebugInfo()
     {
         if (!settings.DebugEnable.Value) return;
