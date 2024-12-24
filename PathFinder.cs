@@ -67,107 +67,93 @@ public class PathFinder
     // TODO: Validate
     public List<(int, int)> FindBestPath()
     {
-        int numLayers = roomLayout.Length;
-        var startNode = (7, 0);
+        var startLayer = roomsByLayer.Count - 1;
+        var startRoom = PlayerRoomIndex;
+        var startNode = (startLayer, startRoom);
 
         var bestPath = new Dictionary<(int, int), List<(int, int)>> { { startNode, new List<(int, int)> { startNode } } };
-        var minCost = new Dictionary<(int, int), int>();
-        foreach (var room in roomWeightMap.Keys)
+        var minCost = new Dictionary<(int, int), double>();
+
+        // Initialize all possible room positions
+        for (var layer = 0; layer < roomsByLayer.Count; layer++)
         {
-            minCost[room] = int.MaxValue;
+            for (var room = 0; room < roomsByLayer[layer].Count; room++)
+            {
+                if (roomsByLayer[layer][room] != null)
+                {
+                    minCost[(layer, room)] = double.MaxValue;
+                }
+            }
         }
-        minCost[startNode] = roomWeightMap[startNode];
+        minCost[startNode] = roomWeights[startLayer, startRoom];
 
         var queue = new SortedSet<(int, int)>(Comparer<(int, int)>.Create((a, b) =>
         {
-            int costA = minCost[a];
-            int costB = minCost[b];
-            if (costA != costB)
+            int compareResult = minCost[a].CompareTo(minCost[b]);
+            if (compareResult != 0)
             {
-                return costA.CompareTo(costB);
+                return compareResult;
             }
-            // If costs are equal, break the tie by comparing the nodes
-            return a.CompareTo(b);
+            // If costs are equal, break ties consistently
+            return (a.Item1 != b.Item1) ? a.Item1.CompareTo(b.Item1) : a.Item2.CompareTo(b.Item2);
         }))
-    {
-        startNode
-    };
+        {
+            startNode
+        };
 
         while (queue.Any())
         {
-            var currentRoom = queue.First();
-            queue.Remove(currentRoom); // Remove the processed node from the queue
+            var currentNode = queue.First();
+            queue.Remove(currentNode);
 
-            foreach (var neighbor in GetNeighbors(currentRoom, roomLayout))
+            // Get valid neighbors from the room layout
+            var neighbors = GetNeighbors(currentNode);
+            foreach (var neighbor in neighbors)
             {
-                int neighborCost = minCost[currentRoom] + roomWeightMap[neighbor];
+                double neighborCost = minCost[currentNode] + roomWeights[neighbor.Item1, neighbor.Item2];
 
                 if (neighborCost < minCost[neighbor])
                 {
-                    // Remove the old entry before adding the updated one
                     queue.Remove(neighbor);
-
-                    // Update the minimum cost and best path
                     minCost[neighbor] = neighborCost;
-
-                    // Add the neighbor to the queue at the correct position
                     queue.Add(neighbor);
 
-                    // Create a new list for the neighbor node and copy the path from the current node
-                    bestPath[neighbor] = new List<(int, int)>(bestPath[currentRoom]) { neighbor };
+                    bestPath[neighbor] = new List<(int, int)>(bestPath[currentNode]) { neighbor };
                 }
             }
         }
 
-        // DEBUGGING
-        /*foreach (var kvp in bestPath)
-        {
-            var key = kvp.Key;
-            var value = kvp.Value;
-
-            // Output the key and value to LogError
-            LogError($"Key: {key}, Value: {string.Join(", ", value)}, minCost: {minCost[key]}");
-        }*/
-
-        var groupedPaths = bestPath.GroupBy(pair => pair.Value.Count());
-        var maxCountGroup = groupedPaths.OrderByDescending(group => group.Key).FirstOrDefault();
-        var path = maxCountGroup.OrderBy(pair => minCost.GetValueOrDefault(pair.Key, int.MaxValue)).FirstOrDefault().Value;
-        if (PlayerLayerIndex != -1 && PlayerRoomIndex != -1)
-        {
-            path = bestPath.TryGetValue((PlayerLayerIndex, PlayerRoomIndex), out var specificPath) ? specificPath : new List<(int, int)>();
-        }
-
-
-        if (path == null)
+        // Find the path that reaches the lowest layer (0) with the best cost
+        var lowestLayerPaths = bestPath.Where(kvp => kvp.Key.Item1 == 0);
+        if (!lowestLayerPaths.Any())
         {
             return new List<(int, int)>();
         }
 
-        return path;
+        return lowestLayerPaths.OrderBy(kvp => minCost[kvp.Key]).First().Value;
     }
 
-    private static IEnumerable<(int, int)> GetNeighbors((int, int) currentRoom, byte[][][] connections)
+    private List<(int, int)> GetNeighbors((int layer, int room) current)
     {
-        int currentLayerIndex = currentRoom.Item1;
-        int currentRoomIndex = currentRoom.Item2;
-        int previousLayerIndex = currentLayerIndex - 1;
-
-        if (currentLayerIndex == 0)
+        var neighbors = new List<(int, int)>();
+        
+        // Can only move up one layer at a time
+        if (current.layer <= 0) return neighbors;
+        
+        var targetLayer = current.layer - 1;
+        var connections = roomLayout[current.layer][current.room];
+        
+        foreach (var connectedRoom in connections)
         {
-            yield break; // No neighbors to yield
-        }
-
-        byte[][] previousLayer = connections[previousLayerIndex];
-
-        for (int previousLayerRoomIndex = 0; previousLayerRoomIndex < previousLayer.Length; previousLayerRoomIndex++)
-        {
-            var previousLayerRoom = previousLayer[previousLayerRoomIndex];
-
-            if (previousLayerRoom.Contains((byte)currentRoomIndex))
+            // Verify the room exists in our data structure
+            if (connectedRoom < roomsByLayer[targetLayer].Count && 
+                roomsByLayer[targetLayer][connectedRoom] != null)
             {
-                yield return (previousLayerIndex, previousLayerRoomIndex);
+                neighbors.Add((targetLayer, connectedRoom));
             }
         }
+        
+        return neighbors;
     }
 
     public void DrawDebugInfo()
