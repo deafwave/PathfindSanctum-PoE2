@@ -53,7 +53,8 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
             Graphics.DrawFrame(
                 sanctumRoom.GetClientRectCache, 
                 Settings.BestPathColor, 
-                Settings.FrameThickness);
+                Settings.FrameThickness
+            );
         }
     }
 } 
