@@ -12,6 +12,7 @@ public class PathFinder
 {
     private readonly List<List<SanctumRoomElement>> roomsByLayer;
     private readonly WeightCalculator weightCalculator;
+    private readonly Graphics graphics;
     private readonly double[,] roomWeights;
     private readonly PathfindSanctumSettings settings;
     private readonly Dictionary<(int, int), string> debugTexts = new();
@@ -22,10 +23,12 @@ public class PathFinder
 
     public PathFinder(
         SanctumFloorWindow floorWindow, 
+        Graphics graphics,
         GameController gameController, 
         PathfindSanctumSettings settings,
         SanctumStateTracker stateTracker)
     {
+        this.graphics = graphics;
         this.roomsByLayer = floorWindow.RoomsByLayer;
         this.settings = settings;
         this.weightCalculator = new WeightCalculator(gameController, settings);
@@ -131,8 +134,6 @@ public class PathFinder
 
         return endPoint;
     }
-
-    // TODO: Validate
     public void DrawDebugInfo()
     {
         if (!settings.DebugEnable.Value) return;
@@ -148,11 +149,9 @@ public class PathFinder
                 var debugText = debugTexts.TryGetValue((layer, room), out var text) ? text : string.Empty;
                 var displayText = $"Weight: {roomWeights[layer, room]:F0}\n{debugText}";
                 
-                Graphics.DrawText(
-                    displayText,
-                    pos,
-                    settings.TextColor,
-                    settings.BackgroundColor);
+                var textSize = graphics.MeasureText(displayText);
+                graphics.DrawBox(pos, textSize + pos, settings.BackgroundColor);
+                graphics.DrawText(displayText, pos, settings.TextColor);
             }
         }
     }

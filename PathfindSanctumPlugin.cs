@@ -33,7 +33,7 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         stateTracker.UpdateRoomStates(roomsByLayer, roomLayout);
 
         // Recalculate path using best known states
-        pathFinder = new PathFinder(floorWindow, GameController, Settings, stateTracker);
+        pathFinder = new PathFinder(floorWindow, Graphics, GameController, Settings, stateTracker);
         pathFinder.CreateRoomWeightMap();
         bestPath = pathFinder.FindBestPath();
 
