@@ -171,10 +171,12 @@ public class PathFinder
                 var debugText = debugTexts.TryGetValue((layer, room), out var text) ? text : string.Empty;
                 var displayText = $"Weight: {roomWeights[layer, room]:F0}\n{debugText}";
 
-                // FIXME: graphics.DrawTextWithBackground is in core
-                var textSize = graphics.MeasureText(displayText);
-                graphics.DrawBox(pos, textSize + pos, settings.BackgroundColor);
-                graphics.DrawText(displayText, pos, settings.TextColor);
+                graphics.DrawTextWithBackground(
+                    displayText,
+                    pos,
+                    settings.TextColor,
+                    settings.BackgroundColor
+                );
             }
         }
     }
