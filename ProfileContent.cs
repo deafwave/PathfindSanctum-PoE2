@@ -14,10 +14,11 @@ public class ProfileContent
         {
             RoomTypeWeights = new()
             {
-                ["Gauntlet"] = 0,
-                ["Chalice"] = 1000,
-                ["Hourglass"] = 500,
-                ["Escape"] = 750
+                ["Gauntlet"] = -1000,
+                ["Chalice"] = 0,
+                ["Hourglass"] = 0,
+                ["Escape"] = 100,
+                ["Ritual"] = 0,
             },
             AfflictionWeights = new()
             {
@@ -76,22 +77,21 @@ public class ProfileContent
             },
             RewardWeights = new()
             {
-                // [Previous reward weights remain unchanged]
-                ["Gold Key"] = 3,
-                ["Silver Key"] = 2,
-                ["Bronze Key"] = 1,
-                ["Large Fountain"] = 50000,
-                ["Fountain"] = 25000,
-                ["Pledge to Kochai"] = 45000,
-                ["Honour Halani"] = 40000,
-                ["Honour Ahkeli"] = 40000,
-                ["Honour Orbala"] = 40000,
-                ["Honour Galai"] = 40000,
-                ["Honour Tabana"] = 40000,
+                ["Gold Key"] = 0,
+                ["Silver Key"] = 0,
+                ["Bronze Key"] = 0,
+                ["Large Fountain"] = 0,
+                ["Fountain"] = 0,
+                ["Pledge to Kochai"] = 0,
+                ["Honour Halani"] = 0,
+                ["Honour Ahkeli"] = 0,
+                ["Honour Orbala"] = 0,
+                ["Honour Galai"] = 0,
+                ["Honour Tabana"] = 0,
                 ["Golden Cache"] = 0,
                 ["Silver Cache"] = 0,
                 ["Bronze Cache"] = 0,
-                ["Merchant"] = 30000
+                ["Merchant"] = 0
             }
         };
         return profile;
@@ -103,10 +103,11 @@ public class ProfileContent
         {
             RoomTypeWeights = new()
             {
-                ["Gauntlet"] = -1000,         // More negative for no-hit
-                ["Chalice"] = 1000,
-                ["Hourglass"] = -750,         // More negative for no-hit
-                ["Escape"] = 750
+                ["Gauntlet"] = -500,
+                ["Chalice"] = 0,
+                ["Hourglass"] = -750,
+                ["Escape"] = 100,
+                ["Ritual"] = 0,
             },
             AfflictionWeights = new()
             {
@@ -165,22 +166,21 @@ public class ProfileContent
             },
             RewardWeights = new()
             {
-                // Same reward weights as default profile
-                ["Gold Key"] = 1000000,
-                ["Silver Key"] = 500000,
-                ["Bronze Key"] = 200000,
-                ["Large Fountain"] = 50000,
-                ["Fountain"] = 25000,
-                ["Pledge to Kochai"] = 45000,
-                ["Honour Halani"] = 40000,
-                ["Honour Ahkeli"] = 40000,
-                ["Honour Orbala"] = 40000,
-                ["Honour Galai"] = 40000,
-                ["Honour Tabana"] = 40000,
-                ["Golden Cache"] = 35000,
-                ["Silver Cache"] = 20000,
-                ["Bronze Cache"] = 10000,
-                ["Merchant"] = 30000
+                ["Gold Key"] = 0,
+                ["Silver Key"] = 0,
+                ["Bronze Key"] = 0,
+                ["Large Fountain"] = 0,
+                ["Fountain"] = 0,
+                ["Pledge to Kochai"] = 0,
+                ["Honour Halani"] = 0,
+                ["Honour Ahkeli"] = 0,
+                ["Honour Orbala"] = 0,
+                ["Honour Galai"] = 0,
+                ["Honour Tabana"] = 0,
+                ["Golden Cache"] = 0,
+                ["Silver Cache"] = 0,
+                ["Bronze Cache"] = 0,
+                ["Merchant"] = 0
             }
         };
         return profile;
