@@ -1,9 +1,6 @@
 using ExileCore2;
-using ExileCore2.PoEMemory.Components;
-using ExileCore2.PoEMemory.Elements.Sanctum;
 using ExileCore2.Shared.Enums;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 
 namespace PathfindSanctum;

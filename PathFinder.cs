@@ -1,10 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using ExileCore2.PoEMemory.Elements.Sanctum;
-using Vector2 = System.Numerics.Vector2;
 using ExileCore2;
-using ExileCore2.PoEMemory.Components;
 
 namespace PathfindSanctum;
 
