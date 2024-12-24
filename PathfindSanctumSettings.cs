@@ -12,11 +12,16 @@ public class PathfindSanctumSettings : ISettings
     
     public Dictionary<string, ProfileContent> Profiles = new()
     {
-        ["Default"] = new ProfileContent(),
-        ["No-Hit"] = new ProfileContent()
+        ["Default"] = ProfileContent.CreateDefaultProfile(),
+        ["No-Hit"] = ProfileContent.CreateNoHitProfile()
     };
 
-    public string CurrentProfile;
+    public ListNode CurrentProfile { get; set; }
+
+    public PathfindSanctumSettings()
+    {
+        CurrentProfile = new ListNode { Values = [.. Profiles.Keys] };
+    }
 
     public ColorNode TextColor { get; set; } = new ColorNode(Color.White);
     public ColorNode BackgroundColor { get; set; } = new ColorNode(Color.FromArgb(128, 0, 0, 0));
