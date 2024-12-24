@@ -10,20 +10,12 @@
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
   <ItemGroup>
-    <!-- <Reference Include="ExileCore">
+    <Reference Include="ExileCore">
       <HintPath>$(exileCore2Package)\ExileCore2.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="GameOffsets">
       <HintPath>$(exileCore2Package)\GameOffsets2.dll</HintPath>
-      <Private>False</Private>
-    </Reference> -->
-    <Reference Include="ExileCore">
-      <HintPath>ExileCore2.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="GameOffsets">
-      <HintPath>GameOffsets2.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
