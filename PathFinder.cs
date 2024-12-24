@@ -17,16 +17,16 @@ public class PathFinder
     private readonly Dictionary<(int, int), string> debugTexts = new();
     private readonly SanctumStateTracker sanctumStateTracker;
     
-    public readonly int PlayerLayerIndex;
-    public readonly int PlayerRoomIndex;
+    public readonly int PlayerLayerIndex = -1;
+    public readonly int PlayerRoomIndex = -1;
 
     public PathFinder(
-        List<List<SanctumRoomElement>> roomsByLayer, 
+        SanctumFloorWindow floorWindow, 
         GameController gameController, 
         PathfindSanctumSettings settings,
         SanctumStateTracker stateTracker)
     {
-        this.roomsByLayer = roomsByLayer;
+        this.roomsByLayer = floorWindow.RoomsByLayer;
         this.settings = settings;
         this.weightCalculator = new WeightCalculator(gameController, settings);
         this.sanctumStateTracker = stateTracker;
@@ -34,18 +34,12 @@ public class PathFinder
         roomWeights = new double[roomsByLayer.Count, roomsByLayer.Max(x => x.Count)];
 
         // Find player position
-        for (var layer = 0; layer < roomsByLayer.Count; layer++)
+        PlayerLayerIndex = floorWindow.FloorData.RoomChoices.Count - 1;
+        if (floorWindow.FloorData.RoomChoices.Count > 0)
         {
-            for (var room = 0; room < roomsByLayer[layer].Count; room++)
-            {
-                if (roomsByLayer[layer][room].IsCurrentRoom)
-                {
-                    PlayerLayerIndex = layer;
-                    PlayerRoomIndex = room;
-                    break;
-                }
-            }
+            PlayerRoomIndex = floorWindow.FloorData.RoomChoices.Last();
         }
+        // var CurrentRoom = floorWindow.RoomsByLayer[PlayerLayerIndex][PlayerRoomIndex];
     }
 
     public void CreateRoomWeightMap()
@@ -65,6 +59,7 @@ public class PathFinder
         }
     }
 
+    // TODO: Validate
     public List<(int, int)> FindBestPath()
     {
         var visited = new HashSet<(int, int)>();
@@ -99,6 +94,7 @@ public class PathFinder
         return ReconstructPath(paths);
     }
 
+    // TODO: Validate
     private List<(int, int)> ReconstructPath(Dictionary<(int, int), (int, int)> paths)
     {
         var path = new List<(int, int)>();
@@ -114,6 +110,7 @@ public class PathFinder
         return path;
     }
 
+    // TODO: Validate
     private (int, int) FindEndPoint()
     {
         // Find the room with the highest weight in the last accessible layer
@@ -135,6 +132,7 @@ public class PathFinder
         return endPoint;
     }
 
+    // TODO: Validate
     public void DrawDebugInfo()
     {
         if (!settings.DebugEnable.Value) return;

@@ -13,13 +13,13 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
     {
         if (!GameController.Game.IngameState.InGame) return;
 
-        var sanctumUI = GameController.Game.IngameState.IngameUi.SanctumFloorWindow;
-        if (sanctumUI == null || !sanctumUI.IsVisible) return;
+        var floorWindow = GameController.Game.IngameState.IngameUi.SanctumFloorWindow;
+        if (floorWindow == null || !floorWindow.IsVisible) return;
 
-        var roomsByLayer = sanctumUI.RoomsByLayer;
+        var roomsByLayer = floorWindow.RoomsByLayer;
         if (roomsByLayer == null) return;
 
-        var roomLayout = sanctumUI.FloorData.RoomLayout;
+        var roomLayout = floorWindow.FloorData.RoomLayout;
         if (roomLayout == null) return;
 
         var areaHash = GameController.Area.CurrentArea.Hash;
@@ -33,7 +33,7 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         stateTracker.UpdateRoomStates(roomsByLayer, roomLayout);
 
         // Recalculate path using best known states
-        pathFinder = new PathFinder(roomsByLayer, GameController, Settings, stateTracker);
+        pathFinder = new PathFinder(floorWindow, GameController, Settings, stateTracker);
         pathFinder.CreateRoomWeightMap();
         bestPath = pathFinder.FindBestPath();
 
