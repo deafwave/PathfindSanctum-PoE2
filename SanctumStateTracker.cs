@@ -48,7 +48,7 @@ public class SanctumStateTracker
         roomStates.Clear();
     }
 
-    public RoomState GetBestKnownState(int layer, int room)
+    public RoomState GetRoom(int layer, int room)
     {
         return roomStates.TryGetValue((layer, room), out var state) ? state : null;
     }

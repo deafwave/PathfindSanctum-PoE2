@@ -15,6 +15,7 @@ public class PathFinder
     private readonly double[,] roomWeights;
     private readonly PathfindSanctumSettings settings;
     private readonly Dictionary<(int, int), string> debugTexts = new();
+    private readonly SanctumStateTracker sanctumStateTracker;
     
     public readonly int PlayerLayerIndex;
     public readonly int PlayerRoomIndex;
@@ -28,6 +29,7 @@ public class PathFinder
         this.roomsByLayer = roomsByLayer;
         this.settings = settings;
         this.weightCalculator = new WeightCalculator(gameController, settings);
+        this.sanctumStateTracker = stateTracker;
         
         roomWeights = new double[roomsByLayer.Count, roomsByLayer.Max(x => x.Count)];
 
@@ -55,7 +57,8 @@ public class PathFinder
                 var sanctumRoom = roomsByLayer[layer][room];
                 if (sanctumRoom == null) continue;
 
-                var (weight, debug) = weightCalculator.CalculateRoomWeight(sanctumRoom);
+                var stateTrackerRoom = sanctumStateTracker.GetRoom(layer, room);
+                var (weight, debug) = weightCalculator.CalculateRoomWeight(stateTrackerRoom);
                 roomWeights[layer, room] = weight;
                 debugTexts[(layer, room)] = debug;
             }
