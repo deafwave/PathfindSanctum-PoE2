@@ -1,6 +1,4 @@
 using ExileCore2;
-using ExileCore2.PoEMemory.Elements.Sanctum;
-using ExileCore2.Shared.Nodes;
 using System.Collections.Generic;
 
 namespace PathfindSanctum;
@@ -21,6 +19,9 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         var roomsByLayer = sanctumUI.RoomsByLayer;
         if (roomsByLayer == null) return;
 
+        var roomLayout = sanctumUI.FloorData.RoomLayout;
+        if (roomLayout == null) return;
+
         var areaHash = GameController.Area.CurrentArea.Hash;
         
         if (!stateTracker.IsSameSanctum(areaHash))
@@ -29,7 +30,7 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         }
 
         // Update our known states
-        stateTracker.UpdateRoomStates(roomsByLayer);
+        stateTracker.UpdateRoomStates(roomsByLayer, roomLayout);
 
         // Recalculate path using best known states
         pathFinder = new PathFinder(roomsByLayer, GameController, Settings, stateTracker);

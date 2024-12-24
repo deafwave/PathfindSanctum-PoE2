@@ -113,7 +113,7 @@ public class WeightCalculator
 
     private double CalculateConnectivityBonus(RoomState room)
     {
-        var connectionBonus = room.connections * 100;
+        var connectionBonus = room.Connections * 100;
         debugText.AppendLine($"Connections: +{connectionBonus}");
         return connectionBonus;
     }

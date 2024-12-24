@@ -18,7 +18,7 @@ public class SanctumStateTracker
         return currentAreaHash == newAreaHash;
     }
 
-    public void UpdateRoomStates(List<List<SanctumRoomElement>> roomsByLayer)
+    public void UpdateRoomStates(List<List<SanctumRoomElement>> roomsByLayer, byte[][][] roomLayout)
     {
         for (var layer = 0; layer < roomsByLayer.Count; layer++)
         {
@@ -31,7 +31,8 @@ public class SanctumStateTracker
                 if (!roomStates.ContainsKey(key))
                 {
                     // New room discovered
-                    roomStates[key] = new RoomState(sanctumRoom);
+                    int numConnections = roomLayout[layer][room].Length;
+                    roomStates[key] = new RoomState(sanctumRoom, numConnections);
                 }
                 else
                 {
@@ -59,9 +60,11 @@ public class RoomState
     public string RoomType { get; private set; }
     public string Affliction { get; private set; }
     public string Reward { get; private set; }
+    public int Connections { get; private set; }
 
-    public RoomState(SanctumRoomElement room)
+    public RoomState(SanctumRoomElement room, int numConnections)
     {
+        Connections = numConnections;
         UpdateRoom(room);
     }
 
