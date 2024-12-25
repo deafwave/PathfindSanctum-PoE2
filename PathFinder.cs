@@ -22,15 +22,15 @@ public class PathFinder
     public PathFinder(
         SanctumFloorWindow floorWindow, 
         Graphics graphics,
-        GameController gameController, 
         PathfindSanctumSettings settings,
-        SanctumStateTracker stateTracker)
+        SanctumStateTracker stateTracker,
+        WeightCalculator weightCalculator)
     {
         this.graphics = graphics;
         this.roomsByLayer = floorWindow.RoomsByLayer;
         this.roomLayout = floorWindow.FloorData.RoomLayout;
         this.settings = settings;
-        this.weightCalculator = new WeightCalculator(gameController, settings);
+        this.weightCalculator = weightCalculator;
         this.sanctumStateTracker = stateTracker;
         
         roomWeights = new double[roomsByLayer.Count, roomsByLayer.Max(x => x.Count)];
