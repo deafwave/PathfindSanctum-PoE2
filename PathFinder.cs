@@ -16,6 +16,8 @@ public class PathFinder
     public readonly int PlayerLayerIndex = -1;
     public readonly int PlayerRoomIndex = -1;
 
+    private List<(int, int)> foundBestPath;
+
     public PathFinder(
         Graphics graphics,
         PathfindSanctumSettings settings,
@@ -117,6 +119,7 @@ public class PathFinder
             return new List<(int, int)>();
         }
 
+        this.foundBestPath = lowestLayerPaths.OrderBy(kvp => minCost[kvp.Key]).First().Value;
         return lowestLayerPaths.OrderBy(kvp => minCost[kvp.Key]).First().Value;
     }
 
@@ -170,6 +173,25 @@ public class PathFinder
                     settings.BackgroundColor
                 );
             }
+        }
+    }
+
+    public void DrawBestPath()
+    {
+        if (this.foundBestPath == null) return;
+
+        foreach (var room in this.foundBestPath)
+        {
+            if (room.Item1 == PlayerLayerIndex && 
+                room.Item2 == PlayerRoomIndex) continue;
+
+            var sanctumRoom = sanctumStateTracker.roomsByLayer[room.Item1][room.Item2];
+
+            graphics.DrawFrame(
+                sanctumRoom.GetClientRectCache, 
+                settings.BestPathColor, 
+                settings.FrameThickness
+            );
         }
     }
 }

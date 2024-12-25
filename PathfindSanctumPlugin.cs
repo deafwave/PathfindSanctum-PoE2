@@ -40,28 +40,16 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         // Update our known states
         stateTracker.UpdateRoomStates(floorWindow);
 
+        // TODO: Optimize this so it's not executed on every render (maybe only executed if we updated our known states)
         // Recalculate path using best known states
         pathFinder.CreateRoomWeightMap();
         bestPath = pathFinder.FindBestPath();
 
-        // Draw debug info if enabled
         if (Settings.DebugEnable)
         {
             pathFinder.DrawDebugInfo();
         }
 
-        // Draw best path
-        foreach (var room in bestPath)
-        {
-            if (room.Item1 == pathFinder.PlayerLayerIndex && 
-                room.Item2 == pathFinder.PlayerRoomIndex) continue;
-
-            var sanctumRoom = roomsByLayer[room.Item1][room.Item2];
-            Graphics.DrawFrame(
-                sanctumRoom.GetClientRectCache, 
-                Settings.BestPathColor, 
-                Settings.FrameThickness
-            );
-        }
+        pathFinder.DrawBestPath();
     }
 } 
