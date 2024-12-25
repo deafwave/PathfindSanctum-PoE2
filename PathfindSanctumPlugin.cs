@@ -24,7 +24,7 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         if (floorWindow == null || !floorWindow.IsVisible) return;
 
         var roomsByLayer = floorWindow.RoomsByLayer;
-        if (roomsByLayer == null) return;
+        if (roomsByLayer == null || roomsByLayer.Count == 0) return;
 
         var roomLayout = floorWindow.FloorData.RoomLayout;
         if (roomLayout == null) return;
