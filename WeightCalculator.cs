@@ -5,17 +5,11 @@ using System.Text;
 
 namespace PathfindSanctum;
 
-public class WeightCalculator
+public class WeightCalculator(GameController gameController, PathfindSanctumSettings settings)
 {
-    private readonly GameController gameController;
-    private readonly PathfindSanctumSettings settings;
+    private readonly GameController gameController = gameController;
+    private readonly PathfindSanctumSettings settings = settings;
     private readonly StringBuilder debugText = new();
-
-    public WeightCalculator(GameController gameController, PathfindSanctumSettings settings)
-    {
-        this.gameController = gameController;
-        this.settings = settings;
-    }
 
     public (double weight, string debug) CalculateRoomWeight(RoomState room)
     {
@@ -67,18 +61,12 @@ public class WeightCalculator
 
     private (float weight, string explanation) CalculateDynamicAfflictionWeight(string afflictionName)
     {
-        switch (afflictionName)
+        return afflictionName switch
         {
-            case "Iron Manacles":
-                return CalculateIronManaclesWeight();
-                
+            "Iron Manacles" => CalculateIronManaclesWeight(),
             // Future dynamic affliction weights can be added here
-            // case "Some Other Affliction":
-            //     return CalculateSomeOtherAfflictionWeight();
-                
-            default:
-                return (0, string.Empty); // No dynamic modification
-        }
+            _ => ((float weight, string explanation))(0, string.Empty), // No dynamic modification
+        };
     }
 
     private (float weight, string explanation) CalculateIronManaclesWeight()
