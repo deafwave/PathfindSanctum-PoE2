@@ -13,9 +13,6 @@ public class PathFinder
     private readonly Dictionary<(int, int), string> debugTexts = new();
     private readonly SanctumStateTracker sanctumStateTracker;
     
-    public readonly int PlayerLayerIndex = -1;
-    public readonly int PlayerRoomIndex = -1;
-
     private List<(int, int)> foundBestPath;
 
     public PathFinder(
@@ -56,8 +53,8 @@ public class PathFinder
     {
         var roomsByLayer = sanctumStateTracker.roomsByLayer;
 
-        var startLayer = roomsByLayer.Count - 1;
-        var startRoom = PlayerRoomIndex;
+        var startLayer = 7;
+        var startRoom = 0;
         var startNode = (startLayer, startRoom);
 
         var bestPath = new Dictionary<(int, int), List<(int, int)>> { { startNode, new List<(int, int)> { startNode } } };
@@ -182,8 +179,8 @@ public class PathFinder
 
         foreach (var room in this.foundBestPath)
         {
-            if (room.Item1 == PlayerLayerIndex && 
-                room.Item2 == PlayerRoomIndex) continue;
+            if (room.Item1 == sanctumStateTracker.PlayerLayerIndex && 
+                room.Item2 == sanctumStateTracker.PlayerRoomIndex) continue;
 
             var sanctumRoom = sanctumStateTracker.roomsByLayer[room.Item1][room.Item2];
 
