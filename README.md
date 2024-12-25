@@ -1,4 +1,4 @@
-# BetterSanctum
+# PathfindSanctum
 
 If you like it, you can donate via:
 
