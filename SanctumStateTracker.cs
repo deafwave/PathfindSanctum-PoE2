@@ -1,5 +1,6 @@
 using ExileCore2.PoEMemory.Elements.Sanctum;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PathfindSanctum;
 
@@ -8,6 +9,12 @@ public class SanctumStateTracker
     private uint? currentAreaHash;
     private Dictionary<(int Layer, int Room), RoomState> roomStates = new();
 
+    public List<List<SanctumRoomElement>> roomsByLayer;
+    public byte[][][] roomLayout;
+
+    public int PlayerLayerIndex = -1;
+    public int PlayerRoomIndex = -1;
+    
     public bool IsSameSanctum(uint newAreaHash)
     {
         if (currentAreaHash == null)
@@ -18,8 +25,21 @@ public class SanctumStateTracker
         return currentAreaHash == newAreaHash;
     }
 
-    public void UpdateRoomStates(List<List<SanctumRoomElement>> roomsByLayer, byte[][][] roomLayout)
+    public void UpdateRoomStates(SanctumFloorWindow floorWindow)
     {
+        // Update Layout Data
+        this.roomsByLayer = floorWindow.RoomsByLayer;
+        this.roomLayout = floorWindow.FloorData.RoomLayout;
+
+        // Update Player Data
+        PlayerLayerIndex = floorWindow.FloorData.RoomChoices.Count - 1;
+        if (floorWindow.FloorData.RoomChoices.Count > 0)
+        {
+            PlayerRoomIndex = floorWindow.FloorData.RoomChoices.Last();
+        }
+        // var CurrentRoom = floorWindow.RoomsByLayer[PlayerLayerIndex][PlayerRoomIndex];
+
+        // Update Room Data
         for (var layer = 0; layer < roomsByLayer.Count; layer++)
         {
             for (var room = 0; room < roomsByLayer[layer].Count; room++)
