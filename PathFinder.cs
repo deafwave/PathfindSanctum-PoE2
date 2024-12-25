@@ -1,17 +1,14 @@
 using System.Collections.Generic;
 using System.Linq;
-using ExileCore2.PoEMemory.Elements.Sanctum;
 using ExileCore2;
 
 namespace PathfindSanctum;
 
 public class PathFinder
 {
-    private readonly List<List<SanctumRoomElement>> roomsByLayer;
-    private readonly byte[][][] roomLayout;
     private readonly WeightCalculator weightCalculator;
     private readonly Graphics graphics;
-    private readonly double[,] roomWeights;
+    private double[,] roomWeights;
     private readonly PathfindSanctumSettings settings;
     private readonly Dictionary<(int, int), string> debugTexts = new();
     private readonly SanctumStateTracker sanctumStateTracker;
@@ -20,32 +17,23 @@ public class PathFinder
     public readonly int PlayerRoomIndex = -1;
 
     public PathFinder(
-        SanctumFloorWindow floorWindow, 
         Graphics graphics,
         PathfindSanctumSettings settings,
-        SanctumStateTracker stateTracker,
+        SanctumStateTracker sanctumStateTracker,
         WeightCalculator weightCalculator)
     {
         this.graphics = graphics;
-        this.roomsByLayer = floorWindow.RoomsByLayer;
-        this.roomLayout = floorWindow.FloorData.RoomLayout;
         this.settings = settings;
         this.weightCalculator = weightCalculator;
-        this.sanctumStateTracker = stateTracker;
-        
-        roomWeights = new double[roomsByLayer.Count, roomsByLayer.Max(x => x.Count)];
-
-        // Find player position
-        PlayerLayerIndex = floorWindow.FloorData.RoomChoices.Count - 1;
-        if (floorWindow.FloorData.RoomChoices.Count > 0)
-        {
-            PlayerRoomIndex = floorWindow.FloorData.RoomChoices.Last();
-        }
-        // var CurrentRoom = floorWindow.RoomsByLayer[PlayerLayerIndex][PlayerRoomIndex];
+        this.sanctumStateTracker = sanctumStateTracker;
     }
 
     public void CreateRoomWeightMap()
     {
+        var roomsByLayer = sanctumStateTracker.roomsByLayer;
+
+        roomWeights = new double[roomsByLayer.Count, roomsByLayer.Max(x => x.Count)];
+        
         for (var layer = 0; layer < roomsByLayer.Count; layer++)
         {
             for (var room = 0; room < roomsByLayer[layer].Count; room++)
@@ -64,6 +52,8 @@ public class PathFinder
     // TODO: Validate
     public List<(int, int)> FindBestPath()
     {
+        var roomsByLayer = sanctumStateTracker.roomsByLayer;
+
         var startLayer = roomsByLayer.Count - 1;
         var startRoom = PlayerRoomIndex;
         var startNode = (startLayer, startRoom);
@@ -132,6 +122,9 @@ public class PathFinder
 
     private List<(int, int)> GetNeighbors((int layer, int room) current)
     {
+        var roomsByLayer = sanctumStateTracker.roomsByLayer;
+        var roomLayout = sanctumStateTracker.roomLayout;
+
         var neighbors = new List<(int, int)>();
         
         // Can only move up one layer at a time
@@ -157,6 +150,8 @@ public class PathFinder
     {
         if (!settings.DebugEnable.Value) return;
 
+        var roomsByLayer = sanctumStateTracker.roomsByLayer;
+        
         for (var layer = 0; layer < roomsByLayer.Count; layer++)
         {
             for (var room = 0; room < roomsByLayer[layer].Count; room++)

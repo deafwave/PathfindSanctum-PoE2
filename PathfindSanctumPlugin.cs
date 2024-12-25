@@ -13,6 +13,7 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
     public override bool Initialise()
     {
         weightCalculator = new WeightCalculator(GameController, Settings);
+        pathFinder = new PathFinder(Graphics, Settings, stateTracker, weightCalculator);
         return base.Initialise();
     }
 
@@ -37,10 +38,9 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         }
 
         // Update our known states
-        stateTracker.UpdateRoomStates(roomsByLayer, roomLayout);
+        stateTracker.UpdateRoomStates(floorWindow);
 
         // Recalculate path using best known states
-        pathFinder = new PathFinder(floorWindow, Graphics, Settings, stateTracker, weightCalculator);
         pathFinder.CreateRoomWeightMap();
         bestPath = pathFinder.FindBestPath();
 
