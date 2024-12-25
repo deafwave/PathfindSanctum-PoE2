@@ -4,28 +4,20 @@ using ExileCore2;
 
 namespace PathfindSanctum;
 
-public class PathFinder
+public class PathFinder(
+    Graphics graphics,
+    PathfindSanctumSettings settings,
+    SanctumStateTracker sanctumStateTracker,
+    WeightCalculator weightCalculator)
 {
-    private readonly WeightCalculator weightCalculator;
-    private readonly Graphics graphics;
+    private readonly WeightCalculator weightCalculator = weightCalculator;
+    private readonly Graphics graphics = graphics;
     private double[,] roomWeights;
-    private readonly PathfindSanctumSettings settings;
+    private readonly PathfindSanctumSettings settings = settings;
     private readonly Dictionary<(int, int), string> debugTexts = new();
-    private readonly SanctumStateTracker sanctumStateTracker;
+    private readonly SanctumStateTracker sanctumStateTracker = sanctumStateTracker;
     
     private List<(int, int)> foundBestPath;
-
-    public PathFinder(
-        Graphics graphics,
-        PathfindSanctumSettings settings,
-        SanctumStateTracker sanctumStateTracker,
-        WeightCalculator weightCalculator)
-    {
-        this.graphics = graphics;
-        this.settings = settings;
-        this.weightCalculator = weightCalculator;
-        this.sanctumStateTracker = sanctumStateTracker;
-    }
 
     public void CreateRoomWeightMap()
     {
