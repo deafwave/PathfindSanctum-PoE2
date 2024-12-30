@@ -6,21 +6,13 @@ BTC: bc1qke67907s6d5k3cm7lx7m020chyjp9e8ysfwtuz
 
 ETH: 0x3A37B3f57453555C2ceabb1a2A4f55E0eB969105 
 
-## Profile Content Update
-https://poe2db.tw/Trial_of_the_Sekhemas#Affliction
-```JavaScript
-const allAfflictions = document.querySelectorAll("div#Affliction div.flex-grow-1.ms-2");
-let afflictionParsedList = [];
+## What does it do?
 
-allAfflictions.forEach((oneAffliction) => {
-    const splitData = oneAffliction.innerText.split("\n");
-    afflictionParsedList.push(`["${splitData[0]}"] = 0, // ${splitData[2]}`);
-});
+Helps players navigate the Sanctum by calculating and visualizing the optimal path through rooms based on customizable weights for different room types, afflictions, rewards, and connectivity.
 
-copy(afflictionParsedList);
-```
+Automatically updates weights as you progress through the Sanctum, taking into account your current position and providing a visual guide for the most beneficial route based on the profiles preferences and risk tolerance.
 
-## Known weirdness
+# Known exCore2 Weirdness
 
 RoomsByLayer
 - POOR [WORKAROUND](./RoomsByLayerFromUI.cs) WAS CREATED
@@ -41,14 +33,3 @@ Inspiration
 
 Current Honour
 - Offset Missing - 0
-
-
-## TODO
-- Test SanctumStateTracker when you acquire a smoke affliction
-- Finish dynamic weights
-- Check if weights are actually accurate / useful
-- Find a way to read active afflictions
-- Account for active afflictions (if we have +1 affliction, it makes getting afflictions significantly worse)
-- Swap to RoomsByLayer once it's available
-- Find a way to read active relic bonuses
-- [If 100% reduced trap damage taken -> 0 honour taken] -> set to 0 a bunch of afflictions (can reduce them dynamically by a %, but I don't think it's a high priority)
