@@ -19,3 +19,17 @@ allAfflictions.forEach((oneAffliction) => {
 
 copy(afflictionParsedList);
 ```
+
+## Known weirdness
+
+RoomsByLayer
+    - POOR WORKAROUND WAS CREATED
+    - [Empty]
+
+RoomData
+    - UNUSED DUE TO HAVING NO WAY TO TARGET WHAT ROOM IT MEANS
+    - Seems to be missing rooms anyways
+
+Max Honour = Player.Stats.TotalSanctumHonour
+Sacred Water = FloorData.Gold
+Current Honour = Offset Missing
