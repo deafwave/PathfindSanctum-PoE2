@@ -12,7 +12,7 @@ Helps players navigate the Sanctum by calculating and visualizing the optimal pa
 
 Automatically updates weights as you progress through the Sanctum, taking into account your current position and providing a visual guide for the most beneficial route based on the profiles preferences and risk tolerance.
 
-# Known exCore2 Weirdness
+## Known exCore2 Weirdness
 
 RoomsByLayer
 - POOR [WORKAROUND](./RoomsByLayerFromUI.cs) WAS CREATED
