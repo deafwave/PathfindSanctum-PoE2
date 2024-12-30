@@ -1,15 +1,17 @@
 using System.Collections.Generic;
 using System.Numerics;
-using ExileCore2;
 using ExileCore2.Shared;
-using ExileCore2.PoEMemory.Elements.Sanctum;
-using System.Linq;
 
 namespace PathfindSanctum;
 
+/// <summary>
+/// Handles the extraction and organization of Sanctum room data from the game's UI elements until floorWindow.RoomsByLayer is available
+/// </summary>
 public class RoomsByLayerFromUI
 {
-    private static readonly Dictionary<string, string> RewardMapping = new Dictionary<string, string>
+    #region Mappings
+
+    private static readonly Dictionary<string, string> RewardMapping = new()
     {
         { "Awards a Large Sacred Water Fountain", "Large Fountain" },
         { "Awards a Sacred Water Fountain", "Fountain" },
@@ -27,7 +29,7 @@ public class RoomsByLayerFromUI
         { "Awards a Gold Cache. Requires a Gold Key to Open", "Gold Cache" }
     };
 
-    private static readonly Dictionary<string, string> RoomTypeMapping = new Dictionary<string, string>
+    private static readonly Dictionary<string, string> RoomTypeMapping = new()
     {
         { "Chalice Trial", "Chalice" },
         { "Escape Trial", "Escape" },
@@ -40,8 +42,32 @@ public class RoomsByLayerFromUI
         { "Outside of Time", "Boss" }
     };
 
+    #endregion
+
+    #region Models
+
     public class FakeSanctumRoomElement
     {
+        public RoomData Data { get; private set; } = new();
+        public Vector2 Position { get; set; }
+        public RectangleF ClientRect { get; set; }
+
+        public RectangleF GetClientRect() => ClientRect;
+
+        public void UpdateFromTooltip(string roomType, string affliction, string reward)
+        {
+            if (roomType != null)
+                Data.FightRoom = new FightRoom { RoomType = new RoomType { Id = roomType } };
+            
+            if (affliction != null)
+                Data.RoomEffect = new RoomEffect { ReadableName = affliction };
+            
+            if (reward != null)
+                Data.RewardRoom = new RewardRoom { RoomType = new RoomType { Id = reward } };
+        }
+
+        #region Nested Types
+
         public class RoomType
         {
             public string Id { get; set; }
@@ -69,28 +95,10 @@ public class RoomsByLayerFromUI
             public RoomEffect RoomEffect { get; set; }
         }
 
-        public RoomData Data { get; private set; } = new RoomData();
-        public Vector2 Position { get; set; }
-        public RectangleF ClientRect { get; set; }
-
-        public RectangleF GetClientRect() => ClientRect;
-
-        public void UpdateFromTooltip(string roomType, string affliction, string reward)
-        {
-            if (roomType != null)
-            {
-                Data.FightRoom = new FightRoom { RoomType = new RoomType { Id = roomType } };
-            }
-            if (affliction != null)
-            {
-                Data.RoomEffect = new RoomEffect { ReadableName = affliction };
-            }
-            if (reward != null)
-            {
-                Data.RewardRoom = new RewardRoom { RoomType = new RoomType { Id = reward } };
-            }
-        }
+        #endregion
     }
+
+    #endregion
 
     public static List<List<FakeSanctumRoomElement>> GetRoomsByLayer(dynamic floorWindow)
     {
@@ -99,97 +107,99 @@ public class RoomsByLayerFromUI
         var layersContainer = floorWindow?.GetChildAtIndex(0)?.GetChildAtIndex(0)?.GetChildAtIndex(1);
         if (layersContainer == null) return result;
 
-        // For every layer
+        // For each layer
         for (int i = 0; i < layersContainer.Children.Count; i++)
         {
             var layer = new List<FakeSanctumRoomElement>();
             var layerElement = layersContainer.Children[i];
             
-            // For every room
+            // For each room
             foreach (var roomElement in layerElement.Children)
             {
-                if (roomElement?.Tooltip?.Children == null || roomElement.Tooltip.Children.Count == 0)
-                {
-                    // Completely unknown room
-                    var sanctumRoomTemp = new FakeSanctumRoomElement
-                    {
-                        ClientRect = roomElement.GetClientRect(),
-                        Position = roomElement.GetClientRect().TopLeft
-                    };
-                    sanctumRoomTemp.UpdateFromTooltip(null, null, null);
-                    layer.Add(sanctumRoomTemp);
-                    continue;
-                }
-
-                // Process all tooltip texts
-                var tooltipTexts = new List<string>();
-                if (roomElement?.Tooltip?.Children != null)
-                {
-                    for (int tooltipChildIndex = 0; tooltipChildIndex < roomElement.Tooltip.Children.Count; tooltipChildIndex++)
-                    {
-                        var tooltipChild = roomElement.Tooltip.Children[tooltipChildIndex];
-                        if (tooltipChild?.Children != null)
-                        {
-                            for (int textChildIndex = 0; textChildIndex < tooltipChild.Children.Count; textChildIndex++)
-                            {
-                                var text = tooltipChild.Children[textChildIndex]?.Text;
-                                if (!string.IsNullOrEmpty(text))
-                                {
-                                    tooltipTexts.Add(text);
-                                }
-                            }
-                        }
-                    }
-                }
-
-                // if (tooltipTexts.Count == 0)
-                // {
-                //     layer.Add(null);
-                //     continue;
-                // }
-
-                string roomType = null;
-                string affliction = null;
-                string reward = null;
-
-                // Parse room type, affliction, and reward from all tooltip texts
-                foreach (var tooltipText in tooltipTexts)
-                {
-                    if (RewardMapping.TryGetValue(tooltipText, out var mappedReward))
-                    {
-                        reward = mappedReward;
-                    } else if (tooltipText.Contains("<sanctumcurse>"))
-                    {
-                        // Extract affliction from between curly braces
-                        var startBrace = tooltipText.IndexOf("{");
-                        var endBrace = tooltipText.IndexOf("}");
-                        if (startBrace >= 0 && endBrace > startBrace)
-                        {
-                            affliction = tooltipText[(startBrace + 1)..endBrace];
-                        }
-                    }
-                    else if (RoomTypeMapping.TryGetValue(tooltipText, out var mappedRoomType))
-                    {
-                        roomType = mappedRoomType;
-                    }
-                    // else
-                    // {
-                    //     DebugWindow.LogMsg($"Unknown Tooltip: {tooltipText}", 10);
-                    // }
-                }
-
-                var sanctumRoom = new FakeSanctumRoomElement
-                {
-                    ClientRect = roomElement.GetClientRect(),
-                    Position = roomElement.GetClientRect().TopLeft
-                };
-                sanctumRoom.UpdateFromTooltip(roomType, affliction, reward);
-
-                // DebugWindow.LogMsg($"Room: Type={roomType ?? "null"}, Reward={reward ?? "null"}, Affliction={affliction ?? "null"}, Pos={sanctumRoom.Position}");
-                layer.Add(sanctumRoom);
+                var room = ProcessRoomElement(roomElement);
+                layer.Add(room);
             }
+            
             result.Add(layer);
         }
+        
         return result;
+    }
+
+    private static FakeSanctumRoomElement ProcessRoomElement(dynamic roomElement)
+    {
+        var sanctumRoom = new FakeSanctumRoomElement
+        {
+            ClientRect = roomElement.GetClientRect(),
+            Position = roomElement.GetClientRect().TopLeft
+        };
+
+        if (roomElement?.Tooltip?.Children == null || roomElement.Tooltip.Children.Count == 0)
+        {
+            sanctumRoom.UpdateFromTooltip(null, null, null);
+            return sanctumRoom;
+        }
+
+        var tooltipTexts = ExtractTooltipTexts(roomElement);
+        var tooltipInfo = ParseTooltipInformation(tooltipTexts);
+        string roomType = tooltipInfo.Item1;
+        string affliction = tooltipInfo.Item2;
+        string reward = tooltipInfo.Item3;
+        sanctumRoom.UpdateFromTooltip(roomType, affliction, reward);
+
+        return sanctumRoom;
+    }
+
+    private static List<string> ExtractTooltipTexts(dynamic roomElement)
+    {
+        var tooltipTexts = new List<string>();
+        
+        if (roomElement?.Tooltip?.Children == null) return tooltipTexts;
+
+        foreach (var tooltipChild in roomElement.Tooltip.Children)
+        {
+            if (tooltipChild?.Children == null) continue;
+
+            foreach (var textChild in tooltipChild.Children)
+            {
+                var text = textChild?.Text;
+                if (!string.IsNullOrEmpty(text))
+                {
+                    tooltipTexts.Add(text);
+                }
+            }
+        }
+
+        return tooltipTexts;
+    }
+
+    private static (string roomType, string affliction, string reward) ParseTooltipInformation(List<string> tooltipTexts)
+    {
+        string roomType = null;
+        string affliction = null;
+        string reward = null;
+
+        foreach (var tooltipText in tooltipTexts)
+        {
+            if (RewardMapping.TryGetValue(tooltipText, out var mappedReward))
+            {
+                reward = mappedReward;
+            }
+            else if (tooltipText.Contains("<sanctumcurse>"))
+            {
+                var startBrace = tooltipText.IndexOf('{');
+                var endBrace = tooltipText.IndexOf('}');
+                if (startBrace >= 0 && endBrace > startBrace)
+                {
+                    affliction = tooltipText[(startBrace + 1)..endBrace];
+                }
+            }
+            else if (RoomTypeMapping.TryGetValue(tooltipText, out var mappedRoomType))
+            {
+                roomType = mappedRoomType;
+            }
+        }
+
+        return (roomType, affliction, reward);
     }
 } 
