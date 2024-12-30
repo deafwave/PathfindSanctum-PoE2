@@ -27,6 +27,7 @@ public class RoomsByLayerFromUI
             },
             { "Awards a Shrine that bestows the fickle Blessings of the Wind", "Honour Galai" },
             { "Awards a Shrine to restore Honour", "Honour Tabana" },
+            { "Awards a Shrine that restores Honour and grants you a Boon", "Honour Orbala" },
             { "Contains Merchant", "Merchant" },
             { "Awards Bronze Key", "Bronze Key" },
             { "Awards Silver Key", "Silver Key" },
