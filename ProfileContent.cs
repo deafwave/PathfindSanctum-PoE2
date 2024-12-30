@@ -15,7 +15,7 @@ public class ProfileContent
             RoomTypeWeights = new()
             {
                 ["Gauntlet"] = -1000, // Annoying
-                ["Hourglass"] = -250, // Dense mobs but manageable with defenses
+                ["Hourglass"] = -200, // Dense mobs but manageable with defenses
                 ["Chalice"] = 0, // Neutral
                 ["Ritual"] = 0, // Neutral
                 ["Escape"] = 100, // Safe, controlled environment
@@ -23,74 +23,81 @@ public class ProfileContent
             },
             AfflictionWeights = new()
             {
-                // Major afflictions - normal profile
-                ["Corrosive Concoction"] = 0, // You have no [Defences]
-                ["Glass Shard"] = 0, // The next [Boons|Boon] you gain is converted into a random Minor [Afflictions|Affliction]
-                ["Chiselled Stone"] = 0, // Monsters [Petrify] on Hit
-                ["Orb of Negation"] = 0, // Non-[ItemRarity|Unique] [Relic|Relics] have no Effect
-                ["Unquenched Thirst"] = 0, // You cannot gain [SacredWater|Sacred Water]
-                ["Unassuming Brick"] = 0, // You cannot gain any more [Boons]
                 ["Orbala's Leathers"] = 0, // Unknown
-                ["Ghastly Scythe"] = 0, // Losing [Honour] ends the Trial (removed after 3 rooms)
-                ["Veiled Sight"] = 0, // Rooms are unknown on the Trial Map
-                ["Branded Balbalakh"] = 0, // Cannot restore [Honour]
-                ["Death Toll"] = -500, // Take {0} [Physical] Damage after completing the next Room || ? Monsters no longer drop [SacredWater|Sacred Water]
-                ["Deadly Snare"] = 0, // Traps deal Triple Damage
-                // Minor afflictions - normal profile
-                ["Shattered Shield"] = 0, // You have no [EnergyShield|Energy Shield]
+                // Can get trapped
+                ["Glass Shard"] = -4000, // The next [Boons|Boon] you gain is converted into a random Minor [Afflictions|Affliction] ||| (Average weight of all afflictions you don't have)
+                ["Ghastly Scythe"] = -4000, // Losing [Honour] ends the Trial (removed after 3 rooms)
+                ["Veiled Sight"] = -4000, // Rooms are unknown on the Trial Map
+                ["Myriad Aspersions"] = -4000, // When you gain an [Afflictions|Affliction], gain an additional random Minor [Afflictions|Affliction]
+                ["Deceptive Mirror"] = -4000, // You are not always taken to the room you select
+                ["Purple Smoke"] = -4000, // [Afflictions] are unknown on the Trial Map
+                ["Golden Smoke"] = -400, // Rewards are unknown on the Trial Map
+                ["Red Smoke"] = -4000, // Room types are unknown on the Trial Map
+                ["Black Smoke"] = -4000, // You can see one fewer room ahead on the Trial Map
+                // Quickly makes you lose honour
+                ["Rapid Quicksand"] = -1000, // Traps are faster
+                ["Deadly Snare"] = -1000, // Traps deal Triple Damage
+                // Less profit (worse for no-hit runs)
+                ["Forgotten Traditions"] = -1000, // 50% reduced Effect of your Non-[ItemRarity|Unique] [Relic|Relics]
+                ["Season of Famine"] = -1000, // The Merchant offers 50% fewer choices
+                ["Orb of Negation"] = -1000, // Non-[ItemRarity|Unique] [Relic|Relics] have no Effect
+                // Problematic if build is weak
+                ["Branded Balbalakh"] = -1000, // Cannot restore [Honour]
+                ["Chiselled Stone"] = -1000, // Monsters [Petrify] on Hit
+                ["Weakened Flesh"] = -100, // 25% less Maximum [Honour]
+                ["Untouchable"] = -1000, // You are [Curse|Cursed] with [Enfeeble]
+                ["Costly Aid"] = -1000, // Gain a random Minor [Afflictions|Affliction] when you venerate a Maraketh Shrine
+                ["Blunt Sword"] = -1000, // You and your Minions deal 40% less Damage
+                ["Spiked Shell"] = -1000, // Monsters have 50% increased Maximum Life
+                ["Suspected Sympathiser"] = -200, // 50% reduced [Honour] restored
+                ["Haemorrhage"] = -100, // You cannot restore [Honour] (removed after killing the next Boss)
+                // Problematic for certain builds (handled Dynamically)
+                ["Corrosive Concoction"] = 0, // You have no [Defences] ||| Only matters if you're EV or ES based
+                ["Iron Manacles"] = 0, // You have no [Evasion] ||| Only matters if you're EV based
+                ["Shattered Shield"] = 0, // You have no [EnergyShield|Energy Shield] ||| Only matters if you're ES based
+                // Sucks
+                ["Unquenched Thirst"] = -200, // You cannot gain [SacredWater|Sacred Water] ||| Floor 4 this is nearly-free, depends on how many merchants you got left
+                ["Unassuming Brick"] = -1000, // You cannot gain any more [Boons] ||| Floor 4 this is nearly-free, depends on how many merchants you got left
+                ["Tradition's Demand"] = -800, // The Merchant only offers one choice
+                ["Fiendish Wings"] = -600, // Monsters' Action Speed cannot be slowed below base ||| Matters more if you're freezing/electrocuting the target
+                ["Worn Sandals"] = -600, // 25% reduced Movement Speed
+                // Nearly Free
+                ["Death Toll"] = -400, // Take {0} [Physical] Damage after completing the next Room || ? Monsters no longer drop [SacredWater|Sacred Water]
+                ["Spiked Exit"] = -300, // Take {0} [Physical] Damage on Room Completion
+                ["Winter Drought"] = -100, // Lose all [SacredWater|Sacred Water] on floor completion
+                ["Trade Tariff"] = -100, // 50% increased Merchant prices
+                ["Exhausted Wells"] = 0, // Chests no longer grant [SacredWater|Sacred Water]
+                ["Gate Toll"] = -100, // Lose 30 [SacredWater|Sacred Water] on room completion
+                ["Leaking Waterskin"] = -100, // Lose 20 [SacredWater|Sacred Water] when you take Damage from an Enemy [HitDamage|Hit]
+                ["Low Rivers"] = -100, // 50% less [SacredWater|Sacred Water] found
+                // Free
                 ["Sharpened Arrowhead"] = 0, // You have no [Armour]
-                ["Iron Manacles"] = 0, // You have no [Evasion]
-                ["Tradition's Demand"] = 0, // The Merchant only offers one choice
-                ["Worn Sandals"] = -250, // 25% reduced Movement Speed
-                ["Fiendish Wings"] = 0, // Monsters' Action Speed cannot be slowed below base
-                ["Weakened Flesh"] = 0, // 25% less Maximum [Honour]
                 ["Rusted Mallet"] = 0, // Monsters always [Knockback]
-                ["Untouchable"] = 0, // You are [Curse|Cursed] with [Enfeeble]
                 ["Chains of Binding"] = 0, // Monsters inflict [BindingChains|Binding Chains] on [HitDamage|Hit]
-                ["Costly Aid"] = 0, // Gain a random Minor [Afflictions|Affliction] when you venerate a Maraketh Shrine
-                ["Myriad Aspersions"] = 0, // When you gain an [Afflictions|Affliction], gain an additional random Minor [Afflictions|Affliction]
-                ["Season of Famine"] = 0, // The Merchant offers 50% fewer choices
-                ["Forgotten Traditions"] = 0, // 50% reduced Effect of your Non-[ItemRarity|Unique] [Relic|Relics]
-                ["Haemorrhage"] = 0, // You cannot restore [Honour] (removed after killing the next Boss)
-                ["Deceptive Mirror"] = 0, // You are not always taken to the room you select
                 ["Dishonoured Tattoo"] = 0, // 100% increased Damage Taken while on [LowLife|Low Life]
                 ["Tattered Blindfold"] = 0, // 90% reduced Light Radius
-                ["Spiked Exit"] = 0, // Take {0} [Physical] Damage on Room Completion
-                ["Purple Smoke"] = 0, // [Afflictions] are unknown on the Trial Map
-                ["Golden Smoke"] = 0, // Rewards are unknown on the Trial Map
-                ["Red Smoke"] = 0, // Room types are unknown on the Trial Map
-                ["Winter Drought"] = 0, // Lose all [SacredWater|Sacred Water] on floor completion
-                ["Trade Tariff"] = 0, // 50% increased Merchant prices
-                ["Black Smoke"] = 0, // You can see one fewer room ahead on the Trial Map
-                ["Suspected Sympathiser"] = 0, // 50% reduced [Honour] restored
-                ["Hungry Fangs"] = 0, // Monsters remove 5% of your Life, Mana and [EnergyShield|Energy Shield] on [HitDamage|Hit]
-                ["Spiked Shell"] = 0, // Monsters have 50% increased Maximum Life
-                ["Exhausted Wells"] = 0, // Chests no longer grant [SacredWater|Sacred Water]
-                ["Gate Toll"] = 0, // Lose 30 [SacredWater|Sacred Water] on room completion
-                ["Leaking Waterskin"] = 0, // Lose 20 [SacredWater|Sacred Water] when you take Damage from an Enemy [HitDamage|Hit]
-                ["Rapid Quicksand"] = -300, // Traps are faster
-                ["Blunt Sword"] = 0, // You and your Minions deal 40% less Damage
-                ["Low Rivers"] = 0, // 50% less [SacredWater|Sacred Water] found
                 ["Dark Pit"] = 0, // Traps deal 100% increased Damage
                 ["Honed Claws"] = 0, // Monsters deal 30% more Damage
+                // Free Non-Melee
+                ["Hungry Fangs"] = 0, // Monsters remove 5% of your Life, Mana and [EnergyShield|Energy Shield] on [HitDamage|Hit]
             },
             RewardWeights = new()
             {
                 ["Gold Key"] = 0,
                 ["Silver Key"] = 0,
                 ["Bronze Key"] = 0,
-                ["Large Fountain"] = 0,
-                ["Fountain"] = 0,
-                ["Pledge to Kochai"] = 0,
-                ["Honour Halani"] = 0,
-                ["Honour Ahkeli"] = 0,
-                ["Honour Orbala"] = 0,
-                ["Honour Galai"] = 0,
+                ["Large Fountain"] = 6,
+                ["Fountain"] = 5,
+                ["Pledge to Kochai"] = 7,
+                ["Honour Halani"] = 8,
+                ["Honour Ahkeli"] = -1,
+                ["Honour Orbala"] = 9,
+                ["Honour Galai"] = 10, // Need to understand what this does
                 ["Honour Tabana"] = 0,
                 ["Golden Cache"] = 0,
                 ["Silver Cache"] = 0,
                 ["Bronze Cache"] = 0,
-                ["Merchant"] = 0
+                ["Merchant"] = 50 // Not important if sacred water is below ~360 (less with relics)
             }
         };
     }
@@ -106,12 +113,39 @@ public class ProfileContent
     {
         var profile = CreateBaseProfile();
 
-        profile.RoomTypeWeights["Gauntlet"] = -250; // Predictable traps
-        profile.RoomTypeWeights["Hourglass"] = -750; // Dangerous mob density
+        profile.RoomTypeWeights["Gauntlet"] = -200; // Predictable traps
+        profile.RoomTypeWeights["Hourglass"] = -1000; // Dangerous mob density
 
         profile.AfflictionWeights["Death Toll"] = -500000; // Run-Ending
         profile.AfflictionWeights["Spiked Exit"] = -600000; // Run-Ending
+        profile.AfflictionWeights["Deceptive Mirror"] = -400000; // Run-Ending
 
+        profile.AfflictionWeights["Glass Shard"] = -50000; // ~3/48 chance of ending your run
+        profile.AfflictionWeights["Myriad Aspersions"] = -50000; // ~3/48 chance of ending your run every time you mess up
+
+        // Free
+        profile.AfflictionWeights["Ghastly Scythe"] = 0;
+        profile.AfflictionWeights["Deadly Snare"] = 0;
+        profile.AfflictionWeights["Branded Balbalakh"] = 0;
+        profile.AfflictionWeights["Chiselled Stone"] = 0;
+        profile.AfflictionWeights["Weakened Flesh"] = 0;
+        profile.AfflictionWeights["Costly Aid"] = 0;
+        profile.AfflictionWeights["Suspected Sympathiser"] = 0;
+        profile.AfflictionWeights["Haemorrhage"] = 0;
+        profile.AfflictionWeights["Leaking Waterskin"] = 0;
+        profile.AfflictionWeights["Rusted Mallet"] = 0;
+        profile.AfflictionWeights["Chains of Binding"] = 0;
+        profile.AfflictionWeights["Dishonoured Tattoo"] = 0;
+        profile.AfflictionWeights["Dark Pit"] = 0;
+        profile.AfflictionWeights["Honed Claws"] = 0;
+        profile.AfflictionWeights["Hungry Fangs"] = 0;
+
+        // Depends if the relic strategy works
+        // ["Forgotten Traditions"] = -1000, // 50% reduced Effect of your Non-[ItemRarity|Unique] [Relic|Relics]
+        // ["Orb of Negation"] = -1000, // Non-[ItemRarity|Unique] [Relic|Relics] have no Effect
+
+        // Depends if you can't get your combo off in tim
+        // ["Fiendish Wings"] = -600, // Monsters' Action Speed cannot be slowed below base ||| Matters more if you're freezing/electrocuting the target
         return profile;
     }
 
