@@ -29,10 +29,7 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
 
         // var roomsByLayer = floorWindow.RoomsByLayer;
         // if (roomsByLayer == null || roomsByLayer.Count == 0) return;
-        var roomsByLayer = RoomsByLayerFromUI.GetRoomsByLayer(floorWindow);
-        if (roomsByLayer == null || roomsByLayer.Count == 0) return;
-        
- 
+
         var areaHash = GameController.Area.CurrentArea.Hash;
         
         // TODO: Possibly wait until we know they are done with this Sanctum Floor before resetting

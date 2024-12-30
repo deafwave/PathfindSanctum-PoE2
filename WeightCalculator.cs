@@ -18,7 +18,6 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
         debugText.Clear();
         var profile = settings.Profiles[settings.CurrentProfile];
         double weight = 1000000; // Base weight so we can go up or down
-        debugText.AppendLine($"Base: {weight}");
 
         weight += CalculateRoomTypeWeight(room, profile);
         weight += CalculateAfflictionWeights(room, profile);
@@ -31,11 +30,19 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
     private double CalculateRoomTypeWeight(RoomState room, ProfileContent profile)
     {
         var roomType = room.RoomType;
+        if (roomType == null)
+        {
+            // debugText.AppendLine("Room Type (unknown): 0");
+            return 0;
+        }
+
         if (profile.RoomTypeWeights.TryGetValue(roomType, out float typeWeight))
         {
-            debugText.AppendLine($"Room Type ({roomType}): {typeWeight}");
+            debugText.AppendLine($"{roomType}:{typeWeight}");
             return typeWeight;
         }
+        
+        debugText.AppendLine($"Room Type ({roomType}): 0 (not found in weights)");
         return 0;
     }
 
@@ -44,16 +51,22 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
         double totalWeight = 0;
 
         var affliction = room.Affliction;
+        if (affliction == null)
+        {
+            // debugText.AppendLine("Affliction (unknown): 0");
+            return 0;
+        }
+
         var afflictionName = affliction.ToString();
         var (dynamicWeight, explanation) = CalculateDynamicAfflictionWeight(afflictionName);
         if (explanation != string.Empty)
         {
             totalWeight += dynamicWeight;
-            debugText.AppendLine($"Affliction ({afflictionName}): {explanation}");
+            debugText.AppendLine($"{afflictionName}:{dynamicWeight}");
         } else if (profile.AfflictionWeights.TryGetValue(afflictionName, out float afflictionWeight))
         {
             totalWeight += afflictionWeight;
-            debugText.AppendLine($"Affliction ({afflictionName}): {afflictionWeight}");
+            debugText.AppendLine($"{afflictionName}:{afflictionWeight}");
         }
 
         return totalWeight;
@@ -86,11 +99,16 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
         double weight = 0;
 
         var reward = room.Reward;
+        if (reward == null)
+        {
+            // debugText.AppendLine("Reward (unknown): 0");
+            return 0;
+        }
         var rewardName = reward.ToString();
         if (profile.RewardWeights.TryGetValue(rewardName, out float rewardWeight))
         {
             weight += rewardWeight;
-            debugText.AppendLine($"Reward ({rewardName}): {rewardWeight}");
+            debugText.AppendLine($"{rewardName}:{rewardWeight}");
         }
 
         return weight;
@@ -99,7 +117,7 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
     private double CalculateConnectivityBonus(RoomState room)
     {
         var connectionBonus = room.Connections * 100;
-        debugText.AppendLine($"Connections: +{connectionBonus}");
+        debugText.AppendLine($"Connectivity:{connectionBonus}");
         return connectionBonus;
     }
 } 

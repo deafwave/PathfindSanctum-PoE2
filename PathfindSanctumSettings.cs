@@ -20,7 +20,7 @@ public class PathfindSanctumSettings : ISettings
 
     public PathfindSanctumSettings()
     {
-        CurrentProfile = new ListNode { Values = [.. Profiles.Keys] };
+        CurrentProfile = new ListNode { Values = [.. Profiles.Keys], Value = "Default" };
     }
 
     public ColorNode TextColor { get; set; } = new ColorNode(Color.White);

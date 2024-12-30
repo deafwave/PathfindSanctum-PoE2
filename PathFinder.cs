@@ -148,10 +148,12 @@ public class PathFinder(
         {
             for (var room = 0; room < roomsByLayer[layer].Count; room++)
             {
-                var sanctumRoom = roomsByLayer[layer][room];
+                var sanctumRoom = sanctumStateTracker.GetRoom(layer,room);
                 if (sanctumRoom == null) continue;
 
-                var pos = sanctumRoom.GetClientRect().Center;
+                var pos = sanctumRoom.Position;
+
+                // DebugWindow.LogMsg($"{layer}, {room}: {pos}");
                 var debugText = debugTexts.TryGetValue((layer, room), out var text) ? text : string.Empty;
                 var displayText = $"Weight: {roomWeights[layer, room]:F0}\n{debugText}";
 
@@ -177,7 +179,7 @@ public class PathFinder(
             var sanctumRoom = sanctumStateTracker.roomsByLayer[room.Item1][room.Item2];
 
             graphics.DrawFrame(
-                sanctumRoom.GetClientRectCache, 
+                sanctumRoom.GetClientRect(), 
                 settings.BestPathColor, 
                 settings.FrameThickness
             );

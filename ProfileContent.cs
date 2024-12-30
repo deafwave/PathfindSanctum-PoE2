@@ -19,6 +19,7 @@ public class ProfileContent
                 ["Chalice"] = 0,         // Neutral
                 ["Ritual"] = 0,          // Neutral
                 ["Escape"] = 100,        // Safe, controlled environment
+                ["Boss"] = 0,            // Required
             },
             AfflictionWeights = new()
             {
