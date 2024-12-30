@@ -5,8 +5,8 @@ namespace PathfindSanctum;
 
 public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
 {
-    private PathFinder pathFinder;
     private readonly SanctumStateTracker stateTracker = new();
+    private PathFinder pathFinder;
     private WeightCalculator weightCalculator;
     private List<(int, int)> bestPath;
 
@@ -26,15 +26,14 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         if (floorWindow == null || !floorWindow.IsVisible)
             return;
 
-        var roomLayout = floorWindow.FloorData.RoomLayout;
-        if (roomLayout == null)
-            return;
+        UpdateSanctumState(floorWindow);
+        UpdateAndRenderPath();
+    }
 
-        // TODO: Re-enable this check once RoomsByLayer is available
-        // var roomsByLayer = floorWindow.RoomsByLayer;
-        // if (roomsByLayer == null || roomsByLayer.Count == 0) return;
-
-        // TODO: Wait until we know they are done with this Sanctum Floor before resetting
+    private void UpdateSanctumState(dynamic floorWindow)
+    {
+        // TODO: If map is visible & area hash is not the same -> Reset()
+        // Do not reset if map is not visible because you could be trading
         var areaHash = GameController.Area.CurrentArea.Hash;
         if (!stateTracker.IsSameSanctum(areaHash))
         {
@@ -42,9 +41,13 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         }
 
         stateTracker.UpdateRoomStates(floorWindow);
+    }
 
+    private void UpdateAndRenderPath()
+    {
         // TODO: Optimize this so it's not executed on every render (maybe only executed if we updated our known states)
         pathFinder.CreateRoomWeightMap();
+
         if (Settings.DebugEnable)
         {
             pathFinder.DrawDebugInfo();
