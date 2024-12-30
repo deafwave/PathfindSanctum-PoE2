@@ -43,37 +43,33 @@ public class PathFinder(
     // TODO: Validate
     public List<(int, int)> FindBestPath()
     {
-        var roomsByLayer = sanctumStateTracker.roomsByLayer;
-
-        var startLayer = 7;
-        var startRoom = 0;
-        var startNode = (startLayer, startRoom);
+        int numLayers = sanctumStateTracker.roomLayout.Length;
+        var startNode = (7, 0);
 
         var bestPath = new Dictionary<(int, int), List<(int, int)>> { { startNode, new List<(int, int)> { startNode } } };
-        var minCost = new Dictionary<(int, int), double>();
+        var maxCost = new Dictionary<(int, int), double>();
 
-        // Initialize all possible room positions
-        for (var layer = 0; layer < roomsByLayer.Count; layer++)
+        // Initialize maxCost for all valid rooms
+        for (int i = 0; i < roomWeights.GetLength(0); i++)
         {
-            for (var room = 0; room < roomsByLayer[layer].Count; room++)
+            for (int j = 0; j < roomWeights.GetLength(1); j++)
             {
-                if (roomsByLayer[layer][room] != null)
-                {
-                    minCost[(layer, room)] = double.MaxValue;
-                }
+                maxCost[(i, j)] = double.MinValue;
             }
         }
-        minCost[startNode] = roomWeights[startLayer, startRoom];
+        maxCost[startNode] = roomWeights[startNode.Item1, startNode.Item2];
 
         var queue = new SortedSet<(int, int)>(Comparer<(int, int)>.Create((a, b) =>
         {
-            int compareResult = minCost[a].CompareTo(minCost[b]);
-            if (compareResult != 0)
+            double costA = maxCost[a];
+            double costB = maxCost[b];
+            if (costA != costB)
             {
-                return compareResult;
+                // Reverse comparison to prioritize higher weights
+                return costB.CompareTo(costA);
             }
-            // If costs are equal, break ties consistently
-            return (a.Item1 != b.Item1) ? a.Item1.CompareTo(b.Item1) : a.Item2.CompareTo(b.Item2);
+            // If costs are equal, break the tie by comparing the nodes
+            return a.CompareTo(b);
         }))
         {
             startNode
@@ -81,61 +77,58 @@ public class PathFinder(
 
         while (queue.Any())
         {
-            var currentNode = queue.First();
-            queue.Remove(currentNode);
+            var currentRoom = queue.First();
+            queue.Remove(currentRoom);
 
-            // Get valid neighbors from the room layout
-            var neighbors = GetNeighbors(currentNode);
-            foreach (var neighbor in neighbors)
+            foreach (var neighbor in GetNeighbors(currentRoom, sanctumStateTracker.roomLayout))
             {
-                double neighborCost = minCost[currentNode] + roomWeights[neighbor.Item1, neighbor.Item2];
+                double neighborCost = maxCost[currentRoom] + roomWeights[neighbor.Item1, neighbor.Item2];
 
-                if (neighborCost < minCost[neighbor])
+                if (neighborCost > maxCost[neighbor])
                 {
                     queue.Remove(neighbor);
-                    minCost[neighbor] = neighborCost;
+                    maxCost[neighbor] = neighborCost;
                     queue.Add(neighbor);
-
-                    bestPath[neighbor] = new List<(int, int)>(bestPath[currentNode]) { neighbor };
+                    bestPath[neighbor] = new List<(int, int)>(bestPath[currentRoom]) { neighbor };
                 }
             }
         }
 
-        // Find the path that reaches the lowest layer (0) with the best cost
-        var lowestLayerPaths = bestPath.Where(kvp => kvp.Key.Item1 == 0);
-        if (!lowestLayerPaths.Any())
+        var groupedPaths = bestPath.GroupBy(pair => pair.Value.Count());
+        var maxCountGroup = groupedPaths.OrderByDescending(group => group.Key).FirstOrDefault();
+        var path = maxCountGroup?.OrderByDescending(pair => maxCost.GetValueOrDefault(pair.Key, double.MinValue)).FirstOrDefault().Value;
+        
+        if (sanctumStateTracker.PlayerLayerIndex != -1 && sanctumStateTracker.PlayerRoomIndex != -1)
         {
-            return new List<(int, int)>();
+            path = bestPath.TryGetValue((sanctumStateTracker.PlayerLayerIndex, sanctumStateTracker.PlayerRoomIndex), out var specificPath) ? specificPath : new List<(int, int)>();
         }
 
-        this.foundBestPath = lowestLayerPaths.OrderBy(kvp => minCost[kvp.Key]).First().Value;
-        return lowestLayerPaths.OrderBy(kvp => minCost[kvp.Key]).First().Value;
+        foundBestPath = path ?? new List<(int, int)>();
+        return foundBestPath;
     }
 
-    private List<(int, int)> GetNeighbors((int layer, int room) current)
+    private static IEnumerable<(int, int)> GetNeighbors((int, int) currentRoom, byte[][][] connections)
     {
-        var roomsByLayer = sanctumStateTracker.roomsByLayer;
-        var roomLayout = sanctumStateTracker.roomLayout;
+        int currentLayerIndex = currentRoom.Item1;
+        int currentRoomIndex = currentRoom.Item2;
+        int previousLayerIndex = currentLayerIndex - 1;
 
-        var neighbors = new List<(int, int)>();
-        
-        // Can only move up one layer at a time
-        if (current.layer <= 0) return neighbors;
-        
-        var targetLayer = current.layer - 1;
-        var connections = roomLayout[current.layer][current.room];
-        
-        foreach (var connectedRoom in connections)
+        if (currentLayerIndex == 0)
         {
-            // Verify the room exists in our data structure
-            if (connectedRoom < roomsByLayer[targetLayer].Count && 
-                roomsByLayer[targetLayer][connectedRoom] != null)
+            yield break; // No neighbors to yield
+        }
+
+        byte[][] previousLayer = connections[previousLayerIndex];
+
+        for (int previousLayerRoomIndex = 0; previousLayerRoomIndex < previousLayer.Length; previousLayerRoomIndex++)
+        {
+            var previousLayerRoom = previousLayer[previousLayerRoomIndex];
+
+            if (previousLayerRoom.Contains((byte)currentRoomIndex))
             {
-                neighbors.Add((targetLayer, connectedRoom));
+                yield return (previousLayerIndex, previousLayerRoomIndex);
             }
         }
-        
-        return neighbors;
     }
 
     public void DrawDebugInfo()

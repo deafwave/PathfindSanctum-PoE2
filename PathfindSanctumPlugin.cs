@@ -50,6 +50,7 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         }
 
         bestPath = pathFinder.FindBestPath();
+        DebugWindow.LogMsg($"Best Path: {string.Join(" -> ", bestPath)}");
         pathFinder.DrawBestPath();
     }
 } 
