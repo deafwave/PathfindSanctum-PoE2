@@ -14,12 +14,12 @@ public class ProfileContent
         {
             RoomTypeWeights = new()
             {
-                ["Gauntlet"] = -1000,    // Annoying
-                ["Hourglass"] = -250,    // Dense mobs but manageable with defenses
-                ["Chalice"] = 0,         // Neutral
-                ["Ritual"] = 0,          // Neutral
-                ["Escape"] = 100,        // Safe, controlled environment
-                ["Boss"] = 0,            // Required
+                ["Gauntlet"] = -1000, // Annoying
+                ["Hourglass"] = -250, // Dense mobs but manageable with defenses
+                ["Chalice"] = 0, // Neutral
+                ["Ritual"] = 0, // Neutral
+                ["Escape"] = 100, // Safe, controlled environment
+                ["Boss"] = 0, // Required
             },
             AfflictionWeights = new()
             {
@@ -36,7 +36,6 @@ public class ProfileContent
                 ["Branded Balbalakh"] = 0, // Cannot restore [Honour]
                 ["Death Toll"] = -500, // Take {0} [Physical] Damage after completing the next Room || ? Monsters no longer drop [SacredWater|Sacred Water]
                 ["Deadly Snare"] = 0, // Traps deal Triple Damage
-                
                 // Minor afflictions - normal profile
                 ["Shattered Shield"] = 0, // You have no [EnergyShield|Energy Shield]
                 ["Sharpened Arrowhead"] = 0, // You have no [Armour]
@@ -100,7 +99,7 @@ public class ProfileContent
     public static ProfileContent CreateDefaultProfile()
     {
         var profile = CreateBaseProfile();
-        
+
         return profile;
     }
 
@@ -108,8 +107,8 @@ public class ProfileContent
     {
         var profile = CreateBaseProfile();
 
-        profile.RoomTypeWeights["Gauntlet"] = -250;     // Predictable traps
-        profile.RoomTypeWeights["Hourglass"] = -750;    // Dangerous mob density
+        profile.RoomTypeWeights["Gauntlet"] = -250; // Predictable traps
+        profile.RoomTypeWeights["Hourglass"] = -750; // Dangerous mob density
 
         profile.AfflictionWeights["Death Toll"] = -1000000; // Run-Ending
         profile.AfflictionWeights["Spiked Exit"] = -1000000; // Run-Ending

@@ -1,7 +1,7 @@
-using ExileCore2;
-using ExileCore2.Shared.Enums;
 using System.Collections.Generic;
 using System.Text;
+using ExileCore2;
+using ExileCore2.Shared.Enums;
 
 namespace PathfindSanctum;
 
@@ -13,7 +13,8 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
 
     public (double weight, string debug) CalculateRoomWeight(RoomState room)
     {
-        if (room == null) return (0, string.Empty);
+        if (room == null)
+            return (0, string.Empty);
 
         debugText.Clear();
         var profile = settings.Profiles[settings.CurrentProfile];
@@ -41,7 +42,7 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
             debugText.AppendLine($"{roomType}:{typeWeight}");
             return typeWeight;
         }
-        
+
         debugText.AppendLine($"Room Type ({roomType}): 0 (not found in weights)");
         return 0;
     }
@@ -63,7 +64,8 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
         {
             totalWeight += dynamicWeight;
             debugText.AppendLine($"{afflictionName}:{dynamicWeight}");
-        } else if (profile.AfflictionWeights.TryGetValue(afflictionName, out float afflictionWeight))
+        }
+        else if (profile.AfflictionWeights.TryGetValue(afflictionName, out float afflictionWeight))
         {
             totalWeight += afflictionWeight;
             debugText.AppendLine($"{afflictionName}:{afflictionWeight}");
@@ -72,7 +74,9 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
         return totalWeight;
     }
 
-    private (float weight, string explanation) CalculateDynamicAfflictionWeight(string afflictionName)
+    private (float weight, string explanation) CalculateDynamicAfflictionWeight(
+        string afflictionName
+    )
     {
         return afflictionName switch
         {
@@ -84,8 +88,11 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
 
     private (float weight, string explanation) CalculateIronManaclesWeight()
     {
-        var playerEvasion = gameController.Player.Stats.GetValueOrDefault(GameStat.EvasionRating, 0);
-        
+        var playerEvasion = gameController.Player.Stats.GetValueOrDefault(
+            GameStat.EvasionRating,
+            0
+        );
+
         if (playerEvasion > 6000)
         {
             return (-5000, "(High Evasion Build: -5000)");
@@ -120,4 +127,4 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
         debugText.AppendLine($"Connectivity:{connectionBonus}");
         return connectionBonus;
     }
-} 
+}
