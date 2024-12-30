@@ -11,36 +11,44 @@ public class RoomsByLayerFromUI
 {
     #region Mappings
 
-    private static readonly Dictionary<string, string> RewardMapping = new()
-    {
-        { "Awards a Large Sacred Water Fountain", "Large Fountain" },
-        { "Awards a Sacred Water Fountain", "Fountain" },
-        { "Awards a Pledge which can be accepted to change the Trial's Parameters", "Pledge to Kochai"},
-        { "Awards a Shrine to restore Honour and gain Sacred Water", "Honour Halani" },
-        { "Awards a Shrine that greatly restores Honour and burdens you with an Affliction", "Honour Ahkeli" },
-        { "Awards a Shrine that bestows the fickle Blessings of the Wind", "Honour Galai" },
-        { "Awards a Shrine to restore Honour", "Honour Tabana" },
-        { "Contains Merchant", "Merchant" },
-        { "Awards Bronze Key", "Bronze Key" },
-        { "Awards Silver Key", "Silver Key" },
-        { "Awards Gold Key", "Gold Key" },
-        { "Awards a Bronze Cache. Requires a Bronze Key to Open", "Bronze Cache" },
-        { "Awards a Silver Cache. Requires a Silver Key to Open", "Silver Cache" },
-        { "Awards a Gold Cache. Requires a Gold Key to Open", "Gold Cache" }
-    };
+    private static readonly Dictionary<string, string> RewardMapping =
+        new()
+        {
+            { "Awards a Large Sacred Water Fountain", "Large Fountain" },
+            { "Awards a Sacred Water Fountain", "Fountain" },
+            {
+                "Awards a Pledge which can be accepted to change the Trial's Parameters",
+                "Pledge to Kochai"
+            },
+            { "Awards a Shrine to restore Honour and gain Sacred Water", "Honour Halani" },
+            {
+                "Awards a Shrine that greatly restores Honour and burdens you with an Affliction",
+                "Honour Ahkeli"
+            },
+            { "Awards a Shrine that bestows the fickle Blessings of the Wind", "Honour Galai" },
+            { "Awards a Shrine to restore Honour", "Honour Tabana" },
+            { "Contains Merchant", "Merchant" },
+            { "Awards Bronze Key", "Bronze Key" },
+            { "Awards Silver Key", "Silver Key" },
+            { "Awards Gold Key", "Gold Key" },
+            { "Awards a Bronze Cache. Requires a Bronze Key to Open", "Bronze Cache" },
+            { "Awards a Silver Cache. Requires a Silver Key to Open", "Silver Cache" },
+            { "Awards a Gold Cache. Requires a Gold Key to Open", "Gold Cache" }
+        };
 
-    private static readonly Dictionary<string, string> RoomTypeMapping = new()
-    {
-        { "Chalice Trial", "Chalice" },
-        { "Escape Trial", "Escape" },
-        { "Ritual Trial", "Ritual" },
-        { "Gauntlet Trial", "Gauntlet" },
-        { "Hourglass Trial", "Hourglass" },
-        { "Collapsing Cavern", "Boss" },
-        { "Ceremonial Chamber", "Boss" },
-        { "Sand Pit", "Boss" },
-        { "Outside of Time", "Boss" }
-    };
+    private static readonly Dictionary<string, string> RoomTypeMapping =
+        new()
+        {
+            { "Chalice Trial", "Chalice" },
+            { "Escape Trial", "Escape" },
+            { "Ritual Trial", "Ritual" },
+            { "Gauntlet Trial", "Gauntlet" },
+            { "Hourglass Trial", "Hourglass" },
+            { "Collapsing Cavern", "Boss" },
+            { "Ceremonial Chamber", "Boss" },
+            { "Sand Pit", "Boss" },
+            { "Outside of Time", "Boss" }
+        };
 
     #endregion
 
@@ -58,10 +66,10 @@ public class RoomsByLayerFromUI
         {
             if (roomType != null)
                 Data.FightRoom = new FightRoom { RoomType = new RoomType { Id = roomType } };
-            
+
             if (affliction != null)
                 Data.RoomEffect = new RoomEffect { ReadableName = affliction };
-            
+
             if (reward != null)
                 Data.RewardRoom = new RewardRoom { RoomType = new RoomType { Id = reward } };
         }
@@ -104,25 +112,29 @@ public class RoomsByLayerFromUI
     {
         var result = new List<List<FakeSanctumRoomElement>>();
 
-        var layersContainer = floorWindow?.GetChildAtIndex(0)?.GetChildAtIndex(0)?.GetChildAtIndex(1);
-        if (layersContainer == null) return result;
+        var layersContainer = floorWindow
+            ?.GetChildAtIndex(0)
+            ?.GetChildAtIndex(0)
+            ?.GetChildAtIndex(1);
+        if (layersContainer == null)
+            return result;
 
         // For each layer
         for (int i = 0; i < layersContainer.Children.Count; i++)
         {
             var layer = new List<FakeSanctumRoomElement>();
             var layerElement = layersContainer.Children[i];
-            
+
             // For each room
             foreach (var roomElement in layerElement.Children)
             {
                 var room = ProcessRoomElement(roomElement);
                 layer.Add(room);
             }
-            
+
             result.Add(layer);
         }
-        
+
         return result;
     }
 
@@ -153,12 +165,14 @@ public class RoomsByLayerFromUI
     private static List<string> ExtractTooltipTexts(dynamic roomElement)
     {
         var tooltipTexts = new List<string>();
-        
-        if (roomElement?.Tooltip?.Children == null) return tooltipTexts;
+
+        if (roomElement?.Tooltip?.Children == null)
+            return tooltipTexts;
 
         foreach (var tooltipChild in roomElement.Tooltip.Children)
         {
-            if (tooltipChild?.Children == null) continue;
+            if (tooltipChild?.Children == null)
+                continue;
 
             foreach (var textChild in tooltipChild.Children)
             {
@@ -173,7 +187,9 @@ public class RoomsByLayerFromUI
         return tooltipTexts;
     }
 
-    private static (string roomType, string affliction, string reward) ParseTooltipInformation(List<string> tooltipTexts)
+    private static (string roomType, string affliction, string reward) ParseTooltipInformation(
+        List<string> tooltipTexts
+    )
     {
         string roomType = null;
         string affliction = null;
@@ -202,4 +218,4 @@ public class RoomsByLayerFromUI
 
         return (roomType, affliction, reward);
     }
-} 
+}
