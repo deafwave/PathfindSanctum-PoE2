@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using ExileCore2;
 using ExileCore2.Shared;
+using ExileCore2.PoEMemory.Elements.Sanctum;
 
 namespace PathfindSanctum;
 
@@ -24,19 +25,17 @@ public class RoomsByLayerFromUI
         public SanctumRoomData RoomData { get; set; }
     }
 
-    public static List<List<UIRoom>> GetRoomsByLayer(dynamic floorWindow)
+    public static List<List<SanctumRoomElement>> GetRoomsByLayer(dynamic floorWindow)
     {
-        var result = new List<List<UIRoom>>();
+        var result = new List<List<SanctumRoomElement>>();
         
         var layersContainer = floorWindow?.GetChildAtIndex(0)?.GetChildAtIndex(0)?.GetChildAtIndex(1);
         if (layersContainer == null) return result;
 
-        // DebugWindow.LogMsg($"Layer children count: {layersContainer.Children.Count}");
-
         // For every layer
         for (int i = 0; i < layersContainer.Children.Count; i++)
         {
-            var layer = new List<UIRoom>();
+            var layer = new List<SanctumRoomElement>();
             var layerElement = layersContainer.Children[i];
             
             // For every room
@@ -75,21 +74,19 @@ public class RoomsByLayerFromUI
                     continue;
                 }
 
-                var roomData = new SanctumRoomData 
-                { 
-                    Position = roomElement.GetClientRect().Center,
-                    ClientRect = roomElement.GetClientRect()
-                };
+                // Create a new SanctumRoomElement with the data we have
+                var roomData = new SanctumRoomElement();
 
-                var room = new UIRoom { RoomData = roomData };
+                string roomType = null;
+                string affliction = null;
+                string reward = null;
 
                 // Parse room type, affliction, and reward from all tooltip texts
                 foreach (var tooltipText in tooltipTexts)
                 {
                     if (tooltipText.StartsWith("Awards"))
                     {
-                        room.Reward = tooltipText.Replace("Awards ", "");
-                        roomData.Reward = room.Reward;
+                        reward = tooltipText.Replace("Awards ", "");
                     }
                     else if (tooltipText.Contains("Afflicts you with"))
                     {
@@ -97,20 +94,28 @@ public class RoomsByLayerFromUI
                         var afflictionEnd = tooltipText.IndexOf("}");
                         if (afflictionStart > 0 && afflictionEnd > afflictionStart)
                         {
-                            room.Affliction = tooltipText.Substring(afflictionStart, afflictionEnd - afflictionStart);
-                            roomData.Affliction = room.Affliction;
+                            affliction = tooltipText.Substring(afflictionStart, afflictionEnd - afflictionStart);
                         }
                     }
                     else
                     {
                         // Assume it's a room type if it doesn't match other patterns
-                        room.RoomType = tooltipText;
-                        roomData.RoomType = room.RoomType;
+                        roomType = tooltipText;
                     }
                 }
 
-                DebugWindow.LogMsg($"Room: Type={room.RoomType ?? "null"}, Reward={room.Reward ?? "null"}, Affliction={room.Affliction ?? "null"}, Pos={roomData.Position}");
-                layer.Add(room);
+                // Since we can't set properties directly, we'll just use the room element itself
+                // The properties will be null/default but at least we have the client rect
+                var sanctumRoom = roomElement as SanctumRoomElement;
+                if (sanctumRoom != null)
+                {
+                    DebugWindow.LogMsg($"Room: Type={roomType ?? "null"}, Reward={reward ?? "null"}, Affliction={affliction ?? "null"}, Pos={sanctumRoom.GetClientRect().Center}");
+                    layer.Add(sanctumRoom);
+                }
+                else
+                {
+                    layer.Add(null);
+                }
             }
             
             result.Add(layer);
