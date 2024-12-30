@@ -19,20 +19,23 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
 
     public override void Render()
     {
-        if (!GameController.Game.IngameState.InGame) return;
+        if (!GameController.Game.IngameState.InGame)
+            return;
 
         var floorWindow = GameController.Game.IngameState.IngameUi.SanctumFloorWindow;
-        if (floorWindow == null || !floorWindow.IsVisible) return;
+        if (floorWindow == null || !floorWindow.IsVisible)
+            return;
 
         var roomLayout = floorWindow.FloorData.RoomLayout;
-        if (roomLayout == null) return;
+        if (roomLayout == null)
+            return;
 
+        // TODO: Re-enable this check once RoomsByLayer is available
         // var roomsByLayer = floorWindow.RoomsByLayer;
         // if (roomsByLayer == null || roomsByLayer.Count == 0) return;
 
+        // TODO: Wait until we know they are done with this Sanctum Floor before resetting
         var areaHash = GameController.Area.CurrentArea.Hash;
-        
-        // TODO: Possibly wait until we know they are done with this Sanctum Floor before resetting
         if (!stateTracker.IsSameSanctum(areaHash))
         {
             stateTracker.Reset(areaHash);
@@ -41,16 +44,13 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         stateTracker.UpdateRoomStates(floorWindow);
 
         // TODO: Optimize this so it's not executed on every render (maybe only executed if we updated our known states)
-        // Recalculate path using best known states
         pathFinder.CreateRoomWeightMap();
-
         if (Settings.DebugEnable)
         {
             pathFinder.DrawDebugInfo();
         }
 
         bestPath = pathFinder.FindBestPath();
-        DebugWindow.LogMsg($"Best Path: {string.Join(" -> ", bestPath)}");
         pathFinder.DrawBestPath();
     }
-} 
+}
