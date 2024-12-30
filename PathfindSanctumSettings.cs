@@ -1,7 +1,7 @@
-using ExileCore2.Shared.Interfaces;
-using ExileCore2.Shared.Nodes;
 using System.Collections.Generic;
 using System.Drawing;
+using ExileCore2.Shared.Interfaces;
+using ExileCore2.Shared.Nodes;
 
 namespace PathfindSanctum;
 
@@ -9,12 +9,13 @@ public class PathfindSanctumSettings : ISettings
 {
     public ToggleNode Enable { get; set; } = new ToggleNode(true);
     public ToggleNode DebugEnable { get; set; } = new ToggleNode(false);
-    
-    public Dictionary<string, ProfileContent> Profiles = new()
-    {
-        ["Default"] = ProfileContent.CreateDefaultProfile(),
-        ["No-Hit"] = ProfileContent.CreateNoHitProfile()
-    };
+
+    public Dictionary<string, ProfileContent> Profiles =
+        new()
+        {
+            ["Default"] = ProfileContent.CreateDefaultProfile(),
+            ["No-Hit"] = ProfileContent.CreateNoHitProfile()
+        };
 
     public ListNode CurrentProfile { get; set; }
 
@@ -28,4 +29,4 @@ public class PathfindSanctumSettings : ISettings
     public ColorNode BestPathColor { get; set; } = new(Color.Green);
 
     public RangeNode<int> FrameThickness { get; set; } = new RangeNode<int>(5, 0, 10);
-} 
+}
