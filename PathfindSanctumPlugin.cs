@@ -1,12 +1,12 @@
-using ExileCore2;
 using System.Collections.Generic;
+using ExileCore2;
 
 namespace PathfindSanctum;
 
 public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
 {
-    private PathFinder pathFinder;
     private readonly SanctumStateTracker stateTracker = new();
+    private PathFinder pathFinder;
     private WeightCalculator weightCalculator;
     private List<(int, int)> bestPath;
 
@@ -19,37 +19,43 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
 
     public override void Render()
     {
-        if (!GameController.Game.IngameState.InGame) return;
+        if (!GameController.Game.IngameState.InGame)
+            return;
 
-        var floorWindow = GameController.Game.IngameState.IngameUi.SanctumFloorWindow;
-        if (floorWindow == null || !floorWindow.IsVisible) return;
+        if (
+            GameController.Area.CurrentArea.Area.RawName == "G2_13"
+            || GameController.Area.CurrentArea.IsHideout
+        )
+            return;
 
-        var roomsByLayer = floorWindow.RoomsByLayer;
-        if (roomsByLayer == null || roomsByLayer.Count == 0) return;
-
-        var roomLayout = floorWindow.FloorData.RoomLayout;
-        if (roomLayout == null) return;
-
-        var areaHash = GameController.Area.CurrentArea.Hash;
-        
-        if (!stateTracker.IsSameSanctum(areaHash))
+        if (
+            stateTracker.HasRoomData()
+            && !stateTracker.IsSameSanctum(GameController.Area.CurrentArea.Hash)
+        )
         {
-            stateTracker.Reset(areaHash);
+            stateTracker.Reset(GameController.Area.CurrentArea.Hash);
+            return;
         }
 
-        // Update our known states
-        stateTracker.UpdateRoomStates(floorWindow);
+        var floorWindow = GameController.Game.IngameState.IngameUi.SanctumFloorWindow;
+        if (floorWindow == null || !floorWindow.IsVisible)
+            return;
 
+        stateTracker.UpdateRoomStates(floorWindow);
+        UpdateAndRenderPath();
+    }
+
+    private void UpdateAndRenderPath()
+    {
         // TODO: Optimize this so it's not executed on every render (maybe only executed if we updated our known states)
-        // Recalculate path using best known states
         pathFinder.CreateRoomWeightMap();
-        bestPath = pathFinder.FindBestPath();
 
         if (Settings.DebugEnable)
         {
             pathFinder.DrawDebugInfo();
         }
 
+        bestPath = pathFinder.FindBestPath();
         pathFinder.DrawBestPath();
     }
-} 
+}
