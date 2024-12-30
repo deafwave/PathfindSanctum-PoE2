@@ -22,25 +22,27 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
         if (!GameController.Game.IngameState.InGame)
             return;
 
+        if (
+            GameController.Area.CurrentArea.Area.RawName == "G2_13"
+            || GameController.Area.CurrentArea.IsHideout
+        )
+            return;
+
+        if (
+            stateTracker.HasRoomData()
+            && !stateTracker.IsSameSanctum(GameController.Area.CurrentArea.Hash)
+        )
+        {
+            stateTracker.Reset(GameController.Area.CurrentArea.Hash);
+            return;
+        }
+
         var floorWindow = GameController.Game.IngameState.IngameUi.SanctumFloorWindow;
         if (floorWindow == null || !floorWindow.IsVisible)
             return;
 
-        UpdateSanctumState(floorWindow);
-        UpdateAndRenderPath();
-    }
-
-    private void UpdateSanctumState(dynamic floorWindow)
-    {
-        // TODO: If map is visible & area hash is not the same -> Reset()
-        // Do not reset if map is not visible because you could be trading
-        var areaHash = GameController.Area.CurrentArea.Hash;
-        if (!stateTracker.IsSameSanctum(areaHash))
-        {
-            stateTracker.Reset(areaHash);
-        }
-
         stateTracker.UpdateRoomStates(floorWindow);
+        UpdateAndRenderPath();
     }
 
     private void UpdateAndRenderPath()
