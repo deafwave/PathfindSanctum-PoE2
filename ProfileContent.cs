@@ -110,8 +110,8 @@ public class ProfileContent
         profile.RoomTypeWeights["Gauntlet"] = -250; // Predictable traps
         profile.RoomTypeWeights["Hourglass"] = -750; // Dangerous mob density
 
-        profile.AfflictionWeights["Death Toll"] = -1000000; // Run-Ending
-        profile.AfflictionWeights["Spiked Exit"] = -1000000; // Run-Ending
+        profile.AfflictionWeights["Death Toll"] = -500000; // Run-Ending
+        profile.AfflictionWeights["Spiked Exit"] = -600000; // Run-Ending
 
         return profile;
     }
