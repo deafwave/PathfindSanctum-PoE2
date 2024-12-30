@@ -23,13 +23,21 @@ copy(afflictionParsedList);
 ## Known weirdness
 
 RoomsByLayer
-    - POOR WORKAROUND WAS CREATED
-    - [Empty]
+- POOR [WORKAROUND](./RoomsByLayerFromUI.cs) WAS CREATED
+- Offset Missing - [Empty]
 
 RoomData
-    - UNUSED DUE TO HAVING NO WAY TO TARGET WHAT ROOM IT MEANS
-    - Seems to be missing rooms anyways
+- UNUSED DUE TO HAVING NO WAY TO TARGET WHAT ROOM IT MEANS
+- Seems to be missing rooms? Only showed 10 of ~25
 
-Max Honour = Player.Stats.TotalSanctumHonour
-Sacred Water = FloorData.Gold
-Current Honour = Offset Missing
+Max Honour
+- Player.Stats.TotalSanctumHonour
+
+Sacred Water
+- FloorData.Gold (just needs to be renamed)
+
+Inspiration
+- No longer exists (can be deleted from EC2)
+
+Current Honour
+- Offset Missing - 0
