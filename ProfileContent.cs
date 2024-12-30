@@ -40,7 +40,6 @@ public class ProfileContent
                 ["Shattered Shield"] = 0, // You have no [EnergyShield|Energy Shield]
                 ["Sharpened Arrowhead"] = 0, // You have no [Armour]
                 ["Iron Manacles"] = 0, // You have no [Evasion]
-                ["Glass Shard"] = 0, // The next [Boons|Boon] you gain is converted into a random Minor [Afflictions|Affliction]
                 ["Tradition's Demand"] = 0, // The Merchant only offers one choice
                 ["Worn Sandals"] = -250, // 25% reduced Movement Speed
                 ["Fiendish Wings"] = 0, // Monsters' Action Speed cannot be slowed below base
