@@ -41,3 +41,11 @@ Inspiration
 
 Current Honour
 - Offset Missing - 0
+
+
+## TODO
+- Test SanctumStateTracker
+- Finish dynamic weights
+- Check if weights are actually accurate / useful
+- Account for active afflictions (if we have +1 affliction, it makes getting afflictions significantly worse)
+- Swap to RoomsByLayer once it's available
