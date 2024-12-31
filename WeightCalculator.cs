@@ -74,6 +74,9 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
         return afflictionName switch
         {
             "Iron Manacles" => CalculateIronManaclesWeight(),
+            "Shattered Shield" => CalculateShatteredShieldWeight(),
+            "Corrosive Concoction"
+                => (CalculateIronManaclesWeight() ?? 0) + (CalculateShatteredShieldWeight() ?? 0),
             _ => null // No dynamic modification
         };
     }
@@ -86,6 +89,21 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
         );
 
         if (playerEvasion > 6000)
+        {
+            return -750;
+        }
+
+        return null;
+    }
+
+    private double? CalculateShatteredShieldWeight()
+    {
+        var playerEnergyShield = gameController.Player.Stats.GetValueOrDefault(
+            GameStat.MaximumEnergyShield,
+            0
+        );
+
+        if (playerEnergyShield > 1000)
         {
             return -750;
         }
