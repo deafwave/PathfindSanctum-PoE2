@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using ExileCore2;
 
 namespace PathfindSanctum;
@@ -8,7 +7,6 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
     private readonly SanctumStateTracker stateTracker = new();
     private PathFinder pathFinder;
     private WeightCalculator weightCalculator;
-    private List<(int, int)> bestPath;
 
     public override bool Initialise()
     {
@@ -55,7 +53,7 @@ public class PathfindSanctumPlugin : BaseSettingsPlugin<PathfindSanctumSettings>
             pathFinder.DrawDebugInfo();
         }
 
-        bestPath = pathFinder.FindBestPath();
+        pathFinder.FindBestPath();
         pathFinder.DrawBestPath();
     }
 }
