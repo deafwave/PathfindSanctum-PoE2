@@ -120,8 +120,8 @@ public class ProfileContent
         profile.AfflictionWeights["Spiked Exit"] = -600000; // Run-Ending
         profile.AfflictionWeights["Deceptive Mirror"] = -400000; // Run-Ending
 
-        profile.AfflictionWeights["Glass Shard"] = -50000; // ~3/48 chance of ending your run
-        profile.AfflictionWeights["Myriad Aspersions"] = -50000; // ~3/48 chance of ending your run every time you mess up
+        profile.AfflictionWeights["Glass Shard"] = -50000; // ~3/58 chance of ending your run
+        profile.AfflictionWeights["Myriad Aspersions"] = -50000; // ~3/58 chance of ending your run every time you mess up
 
         // Free
         profile.AfflictionWeights["Ghastly Scythe"] = 0;
