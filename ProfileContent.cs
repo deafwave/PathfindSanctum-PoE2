@@ -59,8 +59,9 @@ public class ProfileContent
                 ["Unquenched Thirst"] = -200, // You cannot gain [SacredWater|Sacred Water] ||| Floor 4 this is nearly-free, depends on how many merchants you got left
                 ["Unassuming Brick"] = -1000, // You cannot gain any more [Boons] ||| Floor 4 this is nearly-free, depends on how many merchants you got left
                 ["Tradition's Demand"] = -800, // The Merchant only offers one choice
-                ["Fiendish Wings"] = -600, // Monsters' Action Speed cannot be slowed below base ||| Matters more if you're freezing/electrocuting the target
-                ["Worn Sandals"] = -600, // 25% reduced Movement Speed
+                ["Fiendish Wings"] = -400, // Monsters' Action Speed cannot be slowed below base ||| Matters more if you're freezing/electrocuting the target
+                ["Hungry Fangs"] = -600, // Monsters remove 5% of your Life, Mana and [EnergyShield|Energy Shield] on [HitDamage|Hit]
+                ["Worn Sandals"] = -400, // 25% reduced Movement Speed
                 // Nearly Free
                 ["Death Toll"] = -400, // Take {0} [Physical] Damage after completing the next Room || ? Monsters no longer drop [SacredWater|Sacred Water]
                 ["Spiked Exit"] = -300, // Take {0} [Physical] Damage on Room Completion
@@ -79,7 +80,6 @@ public class ProfileContent
                 ["Dark Pit"] = 0, // Traps deal 100% increased Damage
                 ["Honed Claws"] = 0, // Monsters deal 30% more Damage
                 // Free Non-Melee
-                ["Hungry Fangs"] = 0, // Monsters remove 5% of your Life, Mana and [EnergyShield|Energy Shield] on [HitDamage|Hit]
             },
             RewardWeights = new()
             {
