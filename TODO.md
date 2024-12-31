@@ -14,6 +14,7 @@
 - Check if weights are actually accurate / useful
 - Swap to RoomsByLayer once it's available
 - Replace the static dictionaries with e.g. files.SanctumPersistentEffects so it has less maintenance costs as poe2 updates
+- QoTF movement speed boons/afflictions will not work because “other modifiers to movement speed do not apply”
 
 ## Settings
 - Expose ProfileContent weights
