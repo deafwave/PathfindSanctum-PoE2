@@ -63,10 +63,10 @@ public class ProfileContent
                 ["Fiendish Wings"] = -400, // Monsters' Action Speed cannot be slowed below base ||| Matters more if you're freezing/electrocuting the target
                 ["Hungry Fangs"] = -600, // Monsters remove 5% of your Life, Mana and [EnergyShield|Energy Shield] on [HitDamage|Hit]
                 ["Worn Sandals"] = -400, // 25% reduced Movement Speed
+                ["Trade Tariff"] = -300, // 50% increased Merchant prices
                 // Nearly Free
                 ["Death Toll"] = -400, // Take {0} [Physical] Damage after completing the next Room || ? Monsters no longer drop [SacredWater|Sacred Water]
                 ["Spiked Exit"] = -300, // Take {0} [Physical] Damage on Room Completion
-                ["Trade Tariff"] = -100, // 50% increased Merchant prices
                 ["Exhausted Wells"] = 0, // Chests no longer grant [SacredWater|Sacred Water]
                 ["Gate Toll"] = -100, // Lose 30 [SacredWater|Sacred Water] on room completion
                 ["Leaking Waterskin"] = -100, // Lose 20 [SacredWater|Sacred Water] when you take Damage from an Enemy [HitDamage|Hit]
@@ -86,8 +86,8 @@ public class ProfileContent
                 ["Gold Key"] = 0,
                 ["Silver Key"] = 0,
                 ["Bronze Key"] = 0,
-                ["Large Fountain"] = 6,
-                ["Fountain"] = 5,
+                ["Large Fountain"] = 100,
+                ["Fountain"] = 20,
                 ["Pledge to Kochai"] = 7,
                 ["Honour Halani"] = 8,
                 ["Honour Ahkeli"] = -1,
@@ -97,7 +97,7 @@ public class ProfileContent
                 ["Golden Cache"] = 0,
                 ["Silver Cache"] = 0,
                 ["Bronze Cache"] = 0,
-                ["Merchant"] = 50 // Not important if sacred water is below ~360 (less with relics)
+                ["Merchant"] = 20 // Not important if sacred water is below ~360 (less with relics)
             }
         };
     }
