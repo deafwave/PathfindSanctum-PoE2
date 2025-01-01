@@ -14,9 +14,12 @@
 - Check if weights are actually accurate / useful
 - Swap to RoomsByLayer once it's available
 - Replace the static dictionaries with e.g. files.SanctumPersistentEffects so it has less maintenance costs as poe2 updates
-- QoTF movement speed boons/afflictions will not work because “other modifiers to movement speed do not apply”
+- Should we do boons?
+- Don't prioritize fountains if you nuke your sacred water every floor end via affliction :KEKW: 
+- Only prioritize merchant reward if you have more than idk, 360 sacred water - reduced cost relic %
 
 ## Settings
 - Expose ProfileContent weights
 - Expose Dynamic Weights
 - Add confirmation to Reset Profile button
+
