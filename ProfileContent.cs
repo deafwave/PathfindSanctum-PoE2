@@ -41,6 +41,7 @@ public class ProfileContent
                 ["Forgotten Traditions"] = -1000, // 50% reduced Effect of your Non-[ItemRarity|Unique] [Relic|Relics]
                 ["Season of Famine"] = -1000, // The Merchant offers 50% fewer choices
                 ["Orb of Negation"] = -1000, // Non-[ItemRarity|Unique] [Relic|Relics] have no Effect
+                ["Winter Drought"] = -1000, // Lose all [SacredWater|Sacred Water] on floor completion
                 // Problematic if build is weak
                 ["Branded Balbalakh"] = -1000, // Cannot restore [Honour]
                 ["Chiselled Stone"] = -1000, // Monsters [Petrify] on Hit
@@ -65,7 +66,6 @@ public class ProfileContent
                 // Nearly Free
                 ["Death Toll"] = -400, // Take {0} [Physical] Damage after completing the next Room || ? Monsters no longer drop [SacredWater|Sacred Water]
                 ["Spiked Exit"] = -300, // Take {0} [Physical] Damage on Room Completion
-                ["Winter Drought"] = -100, // Lose all [SacredWater|Sacred Water] on floor completion
                 ["Trade Tariff"] = -100, // 50% increased Merchant prices
                 ["Exhausted Wells"] = 0, // Chests no longer grant [SacredWater|Sacred Water]
                 ["Gate Toll"] = -100, // Lose 30 [SacredWater|Sacred Water] on room completion
