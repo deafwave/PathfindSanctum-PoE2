@@ -75,10 +75,26 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
         {
             "Iron Manacles" => CalculateIronManaclesWeight(),
             "Shattered Shield" => CalculateShatteredShieldWeight(),
+            "Worn Sandals" => QueenOfTheForestWeight(),
             "Corrosive Concoction"
                 => (CalculateIronManaclesWeight() ?? 0) + (CalculateShatteredShieldWeight() ?? 0),
             _ => null // No dynamic modification
         };
+    }
+
+    private double? QueenOfTheForestWeight()
+    {
+        var hasQueenOfTheForest = gameController.Player.Stats.GetValueOrDefault(
+            GameStat.MovementSpeedIsOnlyBase1PctPerXEvasionRating,
+            0
+        );
+
+        if (hasQueenOfTheForest > 0)
+        {
+            return 0;
+        }
+
+        return null;
     }
 
     private double? CalculateIronManaclesWeight()
