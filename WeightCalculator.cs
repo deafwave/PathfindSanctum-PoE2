@@ -88,7 +88,11 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
             0
         );
 
-        if (playerEvasion > 6000)
+        if (playerEvasion > 20000)
+        {
+            return -5000;
+        }
+        else if (playerEvasion > 6000)
         {
             return -750;
         }
@@ -103,7 +107,11 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
             0
         );
 
-        if (playerEnergyShield > 1000)
+        if (playerEnergyShield > 6000)
+        {
+            return -5000;
+        }
+        else if (playerEnergyShield > 1000)
         {
             return -750;
         }
