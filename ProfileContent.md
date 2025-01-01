@@ -11,3 +11,6 @@ allAfflictions.forEach((oneAffliction) => {
 
 copy(afflictionParsedList);
 ```
+
+## Notes
+- If you encounter an affliction on floor 1, it can spawn again on floor 2
