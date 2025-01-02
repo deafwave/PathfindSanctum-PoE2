@@ -47,7 +47,7 @@ public class ProfileContent
                 ["Chiselled Stone"] = -1000, // Monsters [Petrify] on Hit
                 ["Weakened Flesh"] = -100, // 25% less Maximum [Honour]
                 ["Untouchable"] = -1000, // You are [Curse|Cursed] with [Enfeeble]
-                ["Costly Aid"] = -1000, // Gain a random Minor [Afflictions|Affliction] when you venerate a Maraketh Shrine
+                ["Costly Aid"] = -900, // Gain a random Minor [Afflictions|Affliction] when you venerate a Maraketh Shrine
                 ["Blunt Sword"] = -1000, // You and your Minions deal 40% less Damage
                 ["Spiked Shell"] = -1000, // Monsters have 50% increased Maximum Life
                 ["Suspected Sympathiser"] = -200, // 50% reduced [Honour] restored
@@ -86,17 +86,17 @@ public class ProfileContent
                 ["Gold Key"] = 0,
                 ["Silver Key"] = 0,
                 ["Bronze Key"] = 0,
-                ["Large Fountain"] = 100,
-                ["Fountain"] = 20,
-                ["Pledge to Kochai"] = 7,
-                ["Honour Halani"] = 8,
-                ["Honour Ahkeli"] = -1,
-                ["Honour Orbala"] = 9,
-                ["Honour Galai"] = 10, // Need to understand what this does
-                ["Honour Tabana"] = 0,
                 ["Golden Cache"] = 0,
                 ["Silver Cache"] = 0,
                 ["Bronze Cache"] = 0,
+                ["Large Fountain"] = 100,
+                ["Fountain"] = 50,
+                ["Pledge to Kochai"] = 20,
+                ["Honour Halani"] = 8,
+                ["Honour Ahkeli"] = -1,
+                ["Honour Orbala"] = 50,
+                ["Honour Galai"] = 10, // Need to understand what this does
+                ["Honour Tabana"] = 0,
                 ["Merchant"] = 20 // Not important if sacred water is below ~360 (less with relics)
             }
         };
