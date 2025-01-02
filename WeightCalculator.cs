@@ -152,7 +152,7 @@ public class WeightCalculator(GameController gameController, PathfindSanctumSett
 
     private double CalculateConnectivityBonus(RoomState room)
     {
-        var connectionBonus = (room.Connections - 1) * 100;
+        var connectionBonus = room.Connections > 1 ? 100 : 0;
         if (settings.DebugEnable.Value)
             debugText.AppendLine($"Connectivity:{connectionBonus}");
         return connectionBonus;
