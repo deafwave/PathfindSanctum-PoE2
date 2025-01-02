@@ -95,7 +95,7 @@ public class ProfileContent
                 ["Honour Halani"] = 8,
                 ["Honour Ahkeli"] = -1,
                 ["Honour Orbala"] = 50,
-                ["Honour Galai"] = 10, // Need to understand what this does
+                ["Honour Galai"] = 300, // Restore Honour, Random Boon Cleanse Affliction
                 ["Honour Tabana"] = 0,
                 ["Merchant"] = 20 // Not important if sacred water is below ~360 (less with relics)
             }
